@@ -1,0 +1,17 @@
+:root {
+  --background: #fbf7f1;
+  --surface: #ffffff;
+  --surface-soft: #f3e9de;
+  --surface-muted: #f8efe7;
+  --text-primary: #2b2522;
+  --text-secondary: #6f625a;
+  --border: #ddd0c4;
+  --brand: #8a5a44;
+  --brand-hover: #704532;
+  --accent: #6e7f68;
+  --danger: #a44949;
+  --warning: #8a6a24;
+  --shadow: 0 16px 40px rgb(43 37 34 / 8%);
+  --radius: 8px;
+  --content: 1120px;
+}

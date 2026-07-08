@@ -1,0 +1,160 @@
+.hero {
+  position: relative;
+  min-height: min(640px, 82vh);
+  display: grid;
+  place-items: end center;
+  padding: 40px 20px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgb(43 37 34 / 10%), rgb(43 37 34 / 70%)),
+    var(--surface-soft);
+}
+
+.heroImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroOverlay {
+  position: relative;
+  width: min(100%, 880px);
+  color: white;
+  text-align: center;
+  text-shadow: 0 1px 20px rgb(0 0 0 / 30%);
+}
+
+.heroOverlay p,
+.eyebrow {
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.heroOverlay h1 {
+  margin: 0;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: clamp(44px, 10vw, 96px);
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+
+.heroOverlay span {
+  display: block;
+  margin-top: 18px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.greeting,
+.farewell {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 48px 0 24px;
+  text-align: center;
+}
+
+.greeting h2,
+.rsvp h2 {
+  margin: 0;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: clamp(32px, 7vw, 52px);
+  line-height: 1;
+}
+
+.greeting p:not(.eyebrow),
+.farewell p {
+  color: var(--text-secondary);
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.events {
+  padding: 24px 0;
+}
+
+.eventCard {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+}
+
+.eventCard h3 {
+  margin: 0 0 4px;
+  font-size: 22px;
+}
+
+.eventCard p {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.mapActions,
+.statusOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.rsvp {
+  margin: 32px 0;
+  padding: 24px;
+}
+
+.rsvpHeader {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.saved {
+  border-radius: 8px;
+  background: #e4efe3;
+  color: var(--accent);
+  padding: 12px;
+  font-weight: 800;
+}
+
+.rsvpForm {
+  display: grid;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.person {
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.person legend {
+  padding: 0 8px;
+  font-weight: 900;
+}
+
+.statusOptions label {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: var(--surface);
+  font-weight: 800;
+}
+
+.statusOptions input {
+  accent-color: var(--brand);
+}

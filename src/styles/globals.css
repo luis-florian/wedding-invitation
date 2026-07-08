@@ -1,0 +1,92 @@
+@import "./tokens.css";
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--background);
+  color: var(--text-primary);
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  font-family: var(--font-sans), Arial, sans-serif;
+  background: var(--background);
+  color: var(--text-primary);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.shell {
+  width: min(100% - 32px, var(--content));
+  margin: 0 auto;
+}
+
+.stack {
+  display: grid;
+  gap: 16px;
+}
+
+.band {
+  padding: 32px 0;
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.muted {
+  color: var(--text-secondary);
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 760px) {
+  .grid.two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grid.four {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

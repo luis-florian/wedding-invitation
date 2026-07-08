@@ -1,0 +1,218 @@
+.nav {
+  display: grid;
+  gap: 14px;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  padding: 14px max(16px, calc((100vw - var(--content)) / 2));
+}
+
+.nav > div {
+  display: grid;
+  gap: 2px;
+}
+
+.nav span {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.nav nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.nav a {
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: var(--text-secondary);
+  font-weight: 800;
+}
+
+.nav a:hover {
+  background: var(--surface-soft);
+  color: var(--text-primary);
+}
+
+@media (min-width: 820px) {
+  .nav {
+    grid-template-columns: 1fr auto auto;
+  }
+}
+
+.loginPage {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.loginCard {
+  width: min(100%, 420px);
+  padding: 24px;
+}
+
+.loginCard h1 {
+  margin: 0 0 8px;
+  font-size: 32px;
+}
+
+.loginForm,
+.formGrid,
+.inlineForm {
+  display: grid;
+  gap: 12px;
+}
+
+.setupColumns {
+  display: grid;
+  gap: 12px;
+}
+
+@media (min-width: 780px) {
+  .setupColumns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.error {
+  border-radius: 8px;
+  background: #f6e1de;
+  color: var(--danger);
+  padding: 10px;
+  font-weight: 800;
+}
+
+.adminPage {
+  padding: 28px 0;
+}
+
+.pageHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.pageHeader h1 {
+  margin: 0;
+  font-size: 34px;
+}
+
+.panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 16px;
+}
+
+.metric {
+  display: grid;
+  gap: 6px;
+}
+
+.metric span {
+  color: var(--text-secondary);
+  font-weight: 800;
+}
+
+.metric strong {
+  font-size: 36px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.tabs a {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-weight: 800;
+}
+
+.tabs a[data-active="true"] {
+  background: var(--brand);
+  color: white;
+  border-color: var(--brand);
+}
+
+.guestList {
+  display: grid;
+  gap: 16px;
+}
+
+.guestCard {
+  display: grid;
+  gap: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 16px;
+}
+
+.guestTop,
+.copyRow,
+.companionRead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.guestTop h3 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.copyRow code {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--text-secondary);
+}
+
+.copyActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.inlineForm {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  align-items: end;
+}
+
+.locked {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-weight: 800;
+}
+
+.companions {
+  display: grid;
+  gap: 10px;
+}
+
+.companions h4 {
+  margin: 0;
+}
