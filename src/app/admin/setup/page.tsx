@@ -5,12 +5,12 @@ export default function AdminSetupPage() {
   const enabled = Boolean(process.env.SETUP_SECRET);
 
   return (
-    <main className="shell band">
-      <section className={`${styles.panel} stack`}>
+    <main className={`${styles.adminShell} ${styles.adminBand}`}>
+      <section className={`${styles.panel} ${styles.adminStack}`}>
         <div>
           <p className={styles.eyebrow}>Setup temporal</p>
           <h1>Crear administradores</h1>
-          <p className="muted">
+          <p className={styles.adminMuted}>
             Esta pantalla crea o actualiza los dos accesos necesarios. Para deshabilitarla,
             elimina `SETUP_SECRET` de las variables de entorno despues de usarla.
           </p>

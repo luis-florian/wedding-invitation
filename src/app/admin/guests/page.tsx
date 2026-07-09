@@ -26,7 +26,7 @@ export default async function AdminGuestsPage({
     : allRows;
 
   return (
-    <main className={`shell ${styles.adminPage}`}>
+    <main className={`${styles.adminShell} ${styles.adminPage}`}>
       <div className={styles.pageHeader}>
         <div>
           <p className={styles.eyebrow}>Lista</p>

@@ -37,7 +37,7 @@ export function GuestEditor({
   const invitationUrl = buildInvitationUrl(guest.token);
 
   return (
-    <div className="stack">
+    <div className={styles.adminStack}>
       <div className={styles.pageHeader}>
         <div>
           <p className={styles.eyebrow}>{sideLabels[guest.ownerSide]}</p>
@@ -51,11 +51,11 @@ export function GuestEditor({
 
       <section className={`${styles.panel} ${styles.editSummary}`}>
         <div>
-          <span className="muted">Estado actual</span>
+          <span className={styles.adminMuted}>Estado actual</span>
           <StatusBadge status={guest.status} />
         </div>
         <div>
-          <span className="muted">Link de invitacion</span>
+          <span className={styles.adminMuted}>Link de invitacion</span>
           <code>{invitationUrl}</code>
         </div>
         <div className={styles.copyActions}>
@@ -68,7 +68,7 @@ export function GuestEditor({
 
       {!canEdit ? (
         <section className={styles.panel}>
-          <p className="muted">
+          <p className={styles.adminMuted}>
             Este invitado pertenece al lado {sideLabels[guest.ownerSide].toLowerCase()}. Puedes verlo,
             pero no editarlo con tu usuario.
           </p>
@@ -88,8 +88,8 @@ export function GuestEditor({
 
       <section className={styles.panel}>
         <h2>Sub invitados</h2>
-        <div className="stack">
-          {guest.companions.length === 0 ? <p className="muted">Sin sub invitados.</p> : null}
+        <div className={styles.adminStack}>
+          {guest.companions.length === 0 ? <p className={styles.adminMuted}>Sin sub invitados.</p> : null}
           {guest.companions.map((companion) => (
             <form action={updateCompanionAction} className={styles.inlineForm} key={companion.id}>
               <input type="hidden" name="id" value={companion.id} />
@@ -146,7 +146,7 @@ export function GuestEditor({
             </Button>
           </form>
           {assignableGuests.length === 0 ? (
-            <p className="muted">No hay invitados disponibles para convertir.</p>
+            <p className={styles.adminMuted}>No hay invitados disponibles para convertir.</p>
           ) : null}
         </section>
       ) : null}

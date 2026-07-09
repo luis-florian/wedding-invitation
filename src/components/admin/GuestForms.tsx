@@ -47,7 +47,7 @@ export function GuestCard({ guest, adminSide }: { guest: GuestRow; adminSide: Ad
         <div>
           <p className={styles.eyebrow}>{sideLabels[guest.ownerSide]}</p>
           <h3>{guest.name}</h3>
-          <p className="muted">{guest.phone || "Sin telefono"}</p>
+          <p className={styles.adminMuted}>{guest.phone || "Sin telefono"}</p>
         </div>
         <StatusBadge status={guest.status} />
       </div>
@@ -80,7 +80,7 @@ export function GuestCard({ guest, adminSide }: { guest: GuestRow; adminSide: Ad
 
       <div className={styles.companions}>
         <h4>Sub invitados</h4>
-        {guest.companions.length === 0 ? <p className="muted">Sin sub invitados.</p> : null}
+        {guest.companions.length === 0 ? <p className={styles.adminMuted}>Sin sub invitados.</p> : null}
         {guest.companions.map((companion) => (
           <CompanionRow
             key={companion.id}

@@ -11,10 +11,10 @@ export default async function AdminWeddingPage() {
 
   if (!bundle) {
     return (
-      <main className={`shell ${styles.adminPage}`}>
+      <main className={`${styles.adminShell} ${styles.adminPage}`}>
         <section className={styles.panel}>
           <h1>Falta seed inicial</h1>
-          <p className="muted">Ejecuta `npm run db:seed` cuando Neon este configurado.</p>
+          <p className={styles.adminMuted}>Ejecuta `npm run db:seed` cuando Neon este configurado.</p>
         </section>
       </main>
     );
@@ -23,7 +23,7 @@ export default async function AdminWeddingPage() {
   const { wedding, events } = bundle;
 
   return (
-    <main className={`shell ${styles.adminPage}`}>
+    <main className={`${styles.adminShell} ${styles.adminPage}`}>
       <div className={styles.pageHeader}>
         <div>
           <p className={styles.eyebrow}>Contenido</p>
@@ -58,7 +58,7 @@ export default async function AdminWeddingPage() {
         <Button type="submit">Guardar boda</Button>
       </form>
 
-      <section className="grid two" style={{ marginTop: 16 }}>
+      <section className={`${styles.adminGrid} ${styles.gridTwo}`} style={{ marginTop: 16 }}>
         {events.map((event) => (
           <form action={updateWeddingEventAction} className={`${styles.panel} ${styles.formGrid}`} key={event.id}>
             <input type="hidden" name="id" value={event.id} />

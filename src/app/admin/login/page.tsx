@@ -9,10 +9,10 @@ export default async function LoginPage() {
 
   return (
     <main className={styles.loginPage}>
-      <section className={`${styles.loginCard} card`}>
+      <section className={`${styles.loginCard} ${styles.adminCard}`}>
         <p className={styles.eyebrow}>Panel administrativo</p>
         <h1>Entrar</h1>
-        <p className="muted">Gestiona invitados, enlaces y confirmaciones.</p>
+        <p className={styles.adminMuted}>Gestiona invitados, enlaces y confirmaciones.</p>
         <LoginForm />
       </section>
     </main>

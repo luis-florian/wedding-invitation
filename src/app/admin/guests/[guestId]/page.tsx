@@ -21,7 +21,7 @@ export default async function AdminGuestEditPage({
       : [];
 
   return (
-    <main className={`shell ${styles.adminPage}`}>
+    <main className={`${styles.adminShell} ${styles.adminPage}`}>
       <GuestEditor guest={guest} adminSide={admin.side} assignableGuests={candidates} />
     </main>
   );

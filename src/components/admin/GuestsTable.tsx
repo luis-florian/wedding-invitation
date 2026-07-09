@@ -21,7 +21,7 @@ export function GuestsTable({
   if (rows.length === 0) {
     return (
       <div className={styles.panel}>
-        <p className="muted">No hay invitados en esta vista.</p>
+        <p className={styles.adminMuted}>No hay invitados en esta vista.</p>
       </div>
     );
   }

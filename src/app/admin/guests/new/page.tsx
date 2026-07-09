@@ -8,7 +8,7 @@ export default async function AdminNewGuestPage() {
   const admin = await requireAdmin();
 
   return (
-    <main className={`shell ${styles.adminPage}`}>
+    <main className={`${styles.adminShell} ${styles.adminPage}`}>
       <div className={styles.pageHeader}>
         <div>
           <p className={styles.eyebrow}>Nuevo</p>

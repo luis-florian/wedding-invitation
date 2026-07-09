@@ -7,6 +7,16 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <div className={styles.adminRoot}>
+      <style>{`
+        html,
+        body {
+          min-height: 100%;
+          margin: 0;
+          background: #071427;
+          color: #f5f8f4;
+          font-family: var(--font-sans), Arial, sans-serif;
+        }
+      `}</style>
       {admin ? <AdminNav admin={admin} /> : null}
       {children}
     </div>

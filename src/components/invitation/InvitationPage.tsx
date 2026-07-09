@@ -1,15 +1,10 @@
-import { CalendarDays, MapPin, Navigation } from "lucide-react";
-import type {
-  Guest,
-  GuestCompanion,
-  RsvpStatus,
-  Wedding,
-  WeddingEvent
-} from "@/db/schema";
+import { CalendarDays, Clock, MapPin, Navigation } from "lucide-react";
+import type { Guest, GuestCompanion, Wedding, WeddingEvent } from "@/db/schema";
 import { updateRsvpAction } from "@/app/actions";
-import { Button, ButtonLink } from "@/components/ui/Button";
-import { StatusBadge } from "@/components/ui/StatusBadge";
-import { formatDate, formatDateTime, statusLabels } from "@/lib/format";
+import { ButtonLink } from "@/components/ui/Button";
+import { formatDate } from "@/lib/format";
+import { Countdown } from "./Countdown";
+import { RsvpSection } from "./RsvpSection";
 import styles from "./invitation.module.css";
 
 type InvitationPageProps = {
@@ -20,7 +15,7 @@ type InvitationPageProps = {
   saved?: boolean;
 };
 
-const statuses: RsvpStatus[] = ["confirmed", "declined", "pending"];
+const fallbackHeroImage = "/images/invitation/couple-hero.webp";
 
 export function InvitationPage({
   wedding,
@@ -30,47 +25,60 @@ export function InvitationPage({
   saved = false
 }: InvitationPageProps) {
   const action = updateRsvpAction.bind(null, guest.token);
+  const heroImageUrl = wedding.heroImageUrl || fallbackHeroImage;
 
   return (
-    <main>
+    <main className={styles.page}>
       <section className={styles.hero}>
-        {wedding.heroImageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={wedding.heroImageUrl} alt="" className={styles.heroImage} />
-        ) : null}
-        <div className={styles.heroOverlay}>
-          <p>Estas invitado</p>
+        <div className={styles.botanicalTop} aria-hidden="true" />
+        <div className={styles.heroContent}>
+          <p className={styles.inviteLabel}>Estas invitado</p>
           <h1>{wedding.coupleNames}</h1>
-          <span>{formatDate(wedding.weddingDate)}</span>
+          <div className={styles.heroDivider} aria-hidden="true" />
+          <figure className={styles.photoFrame}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={heroImageUrl} alt={wedding.coupleNames} className={styles.heroImage} />
+          </figure>
+          <p className={styles.heroDate}>{formatDate(wedding.weddingDate)}</p>
         </div>
       </section>
 
-      <div className="shell">
+      <div className={styles.invitationShell}>
+        <Countdown targetDate={wedding.weddingDate.toISOString()} />
+
         <section className={styles.greeting}>
           <p className={styles.eyebrow}>Para {guest.name}</p>
-          <h2>Nos encantaria compartir este dia contigo.</h2>
+          <h2>Nos encantaria compartir este dia contigo</h2>
           {wedding.introMessage ? <p>{wedding.introMessage}</p> : null}
         </section>
 
-        <section className={`${styles.events} grid two`} aria-label="Eventos">
+        <section className={styles.events} aria-label="Eventos">
           {events.map((event) => (
-            <article className="card" key={event.id}>
-              <div className={styles.eventCard}>
-                <CalendarDays aria-hidden="true" />
-                <div>
-                  <h3>{event.name}</h3>
-                  <p>{formatDateTime(event.startsAt)}</p>
-                  {event.endsAt ? <p className="muted">Finaliza {formatDateTime(event.endsAt)}</p> : null}
-                </div>
-                <p>
-                  <MapPin aria-hidden="true" />
-                  {event.address}
+            <article className={styles.eventCard} key={event.id}>
+              <div className={styles.eventIcon} aria-hidden="true">
+                <CalendarDays size={24} />
+              </div>
+              <p className={styles.eyebrow}>{event.name}</p>
+              <h3>{formatEventTime(event.startsAt)}</h3>
+              <p className={styles.eventDate}>{formatDate(event.startsAt)}</p>
+              {event.endsAt ? (
+                <p className={styles.eventMeta}>
+                  <Clock size={16} aria-hidden="true" />
+                  Finaliza {formatEventTime(event.endsAt)}
                 </p>
+              ) : null}
+              <p className={styles.eventAddress}>
+                <MapPin size={17} aria-hidden="true" />
+                {event.address}
+              </p>
+              <div className={styles.eventCopy}>
                 {event.description ? <p>{event.description}</p> : null}
-                {event.notes ? <p className="muted">{event.notes}</p> : null}
+                {event.notes ? <p>{event.notes}</p> : null}
+              </div>
+              {event.googleMapsUrl || event.wazeUrl ? (
                 <div className={styles.mapActions}>
                   {event.googleMapsUrl ? (
-                    <ButtonLink href={event.googleMapsUrl} variant="secondary" target="_blank">
+                    <ButtonLink href={event.googleMapsUrl} target="_blank">
                       <Navigation size={16} aria-hidden="true" />
                       Google Maps
                     </ButtonLink>
@@ -82,35 +90,18 @@ export function InvitationPage({
                     </ButtonLink>
                   ) : null}
                 </div>
-              </div>
+              ) : null}
             </article>
           ))}
         </section>
 
-        <section className={`${styles.rsvp} card`}>
-          <div className={styles.rsvpHeader}>
-            <div>
-              <p className={styles.eyebrow}>Confirmacion</p>
-              <h2>Actualiza la asistencia</h2>
-            </div>
-            <StatusBadge status={guest.status} />
-          </div>
-          {saved ? (
-            <p className={styles.saved}>Gracias. Tu respuesta quedo actualizada.</p>
-          ) : null}
-          <form action={action} className={styles.rsvpForm}>
-            <PersonStatus name={guest.name} fieldName="guestStatus" defaultStatus={guest.status} />
-            {companions.map((companion) => (
-              <PersonStatus
-                key={companion.id}
-                name={companion.name}
-                fieldName={`companion:${companion.id}`}
-                defaultStatus={companion.status}
-              />
-            ))}
-            <Button type="submit">Guardar respuesta</Button>
-          </form>
-        </section>
+        <RsvpSection
+          action={action}
+          guest={guest}
+          companions={companions}
+          saved={saved}
+          weddingDate={wedding.weddingDate.toISOString()}
+        />
 
         <section className={styles.farewell}>
           <p>{wedding.finalMessage ?? "Gracias por acompanarnos en este momento tan especial."}</p>
@@ -120,31 +111,10 @@ export function InvitationPage({
   );
 }
 
-function PersonStatus({
-  name,
-  fieldName,
-  defaultStatus
-}: {
-  name: string;
-  fieldName: string;
-  defaultStatus: RsvpStatus;
-}) {
-  return (
-    <fieldset className={styles.person}>
-      <legend>{name}</legend>
-      <div className={styles.statusOptions}>
-        {statuses.map((status) => (
-          <label key={status}>
-            <input
-              type="radio"
-              name={fieldName}
-              value={status}
-              defaultChecked={defaultStatus === status}
-            />
-            <span>{statusLabels[status]}</span>
-          </label>
-        ))}
-      </div>
-    </fieldset>
-  );
+function formatEventTime(date: Date) {
+  return new Intl.DateTimeFormat("es-GT", {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "America/Guatemala"
+  }).format(date);
 }
