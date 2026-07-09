@@ -32,6 +32,11 @@ export const companionFormSchema = z.object({
   status: rsvpStatusSchema
 });
 
+export const convertGuestToCompanionSchema = z.object({
+  sourceGuestId: z.string().uuid(),
+  targetGuestId: z.string().uuid()
+});
+
 export const weddingFormSchema = z.object({
   coupleNames: z.string().trim().min(1).max(180),
   weddingDate: z.string().min(1),

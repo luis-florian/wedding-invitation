@@ -29,10 +29,9 @@ export function CreateGuestForm({ adminSide }: { adminSide: AdminSide }) {
       <input type="hidden" name="ownerSide" value={adminSide} />
       <input type="hidden" name="status" value="pending" />
       <TextField label="Nombre" name="name" required />
-      <TextField label="Telefono" name="phone" />
       <Button type="submit">
         <Plus size={16} aria-hidden="true" />
-        Crear invitado {sideLabels[adminSide].toLowerCase()}
+        Guardar invitado {sideLabels[adminSide].toLowerCase()}
       </Button>
     </form>
   );

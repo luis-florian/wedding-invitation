@@ -1,6 +1,7 @@
 .field {
   display: grid;
   gap: 6px;
+  min-width: 0;
   color: var(--text-secondary);
   font-size: 14px;
   font-weight: 700;
@@ -10,6 +11,7 @@
 .field select,
 .field textarea {
   width: 100%;
+  min-width: 0;
   min-height: 44px;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -27,6 +29,6 @@
 .field input:focus,
 .field select:focus,
 .field textarea:focus {
-  outline: 3px solid rgb(138 90 68 / 22%);
+  outline: 3px solid rgb(108 156 85 / 25%);
   border-color: var(--brand);
 }

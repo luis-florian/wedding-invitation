@@ -32,11 +32,9 @@ export function GuestsTable({
         <thead>
           <tr>
             <th>Persona</th>
-            <th>Tipo</th>
             <th>De parte de</th>
             <th>Invitado principal</th>
             <th>Estado</th>
-            <th>Telefono</th>
             <th>Link</th>
             <th>Editar</th>
           </tr>
@@ -50,16 +48,15 @@ export function GuestsTable({
               <tr key={`${row.rowType}-${row.id}`}>
                 <td data-label="Persona">
                   <strong>{row.name}</strong>
+                  {row.rowType === "sub" ? <span>Sub invitado</span> : null}
                 </td>
-                <td data-label="Tipo">{row.rowType === "principal" ? "Principal" : "Sub invitado"}</td>
                 <td data-label="De parte de">{sideLabels[row.ownerSide]}</td>
                 <td data-label="Invitado principal">{row.principalName}</td>
                 <td data-label="Estado">
                   <StatusBadge status={row.status} />
                 </td>
-                <td data-label="Telefono">{row.phone || "-"}</td>
                 <td data-label="Link">
-                  <CopyInviteButton url={invitationUrl} />
+                  {row.rowType === "principal" ? <CopyInviteButton url={invitationUrl} /> : <span className="muted">Mismo link</span>}
                 </td>
                 <td data-label="Editar">
                   <ButtonLink

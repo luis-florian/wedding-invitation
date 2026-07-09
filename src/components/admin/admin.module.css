@@ -1,15 +1,49 @@
-.nav {
-  display: grid;
-  gap: 14px;
-  align-items: center;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
-  padding: 14px max(16px, calc((100vw - var(--content)) / 2));
+.adminRoot {
+  min-height: 100vh;
+  --background: #071427;
+  --foreground: #f5f8f4;
+  --surface: rgba(13, 29, 51, 0.78);
+  --surface-soft: rgba(220, 231, 224, 0.07);
+  --surface-muted: rgba(13, 29, 51, 0.94);
+  --text-primary: #f5f8f4;
+  --text-secondary: #b8c8c0;
+  --border: rgba(220, 231, 224, 0.14);
+  --brand: #6c9c55;
+  --brand-hover: #5a8748;
+  --accent: #dce7e0;
+  --danger: #fca5a5;
+  --warning: #d8bd6a;
+  --status-pending-bg: rgba(216, 189, 106, 0.16);
+  --status-confirmed-bg: rgba(46, 64, 28, 0.5);
+  --status-declined-bg: rgba(127, 29, 29, 0.38);
+  --shadow: 0 18px 50px rgb(0 0 0 / 18%);
+  background:
+    linear-gradient(180deg, rgb(7 20 39 / 96%), #071427 320px),
+    #071427;
+  color: var(--text-primary);
 }
 
-.nav > div {
+.nav {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid rgba(220, 231, 224, 0.14);
+  background: rgba(7, 20, 39, 0.94);
+  padding: 14px max(16px, calc((100vw - var(--content)) / 2));
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(14px);
+}
+
+.navBrand {
   display: grid;
   gap: 2px;
+}
+
+.navBrand strong {
+  font-size: 18px;
 }
 
 .nav span {
@@ -17,15 +51,66 @@
   font-size: 14px;
 }
 
-.nav nav {
+.navMenu {
+  justify-self: end;
+  position: relative;
+}
+
+.navMenu summary {
+  width: 44px;
+  height: 44px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-soft);
+  color: var(--text-primary);
+  cursor: pointer;
+  list-style: none;
+}
+
+.navMenu summary::-webkit-details-marker {
+  display: none;
+}
+
+.navPanel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  width: min(260px, calc(100vw - 32px));
+  display: grid;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-muted);
+  box-shadow: var(--shadow);
+  padding: 10px;
+}
+
+.navMenu:not([open]) .navPanel {
+  display: none;
+}
+
+.nav nav,
+.navPanel form {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
+.navPanel nav {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.navPanel form {
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+
 .nav a {
-  border-radius: 999px;
-  padding: 8px 12px;
+  border-radius: 8px;
+  padding: 10px 12px;
   color: var(--text-secondary);
   font-weight: 800;
 }
@@ -38,6 +123,34 @@
 @media (min-width: 820px) {
   .nav {
     grid-template-columns: 1fr auto auto;
+  }
+
+  .navMenu {
+    display: contents;
+  }
+
+  .navMenu summary {
+    display: none;
+  }
+
+  .navMenu:not([open]) .navPanel,
+  .navPanel {
+    position: static;
+    width: auto;
+    display: contents;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .navPanel form {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .navPanel nav {
+    display: flex;
   }
 }
 
@@ -78,7 +191,7 @@
 
 .error {
   border-radius: 8px;
-  background: #f6e1de;
+  background: rgba(127, 29, 29, 0.38);
   color: var(--danger);
   padding: 10px;
   font-weight: 800;
@@ -107,6 +220,8 @@
   border-radius: var(--radius);
   background: var(--surface);
   padding: 16px;
+  box-shadow: var(--shadow);
+  min-width: 0;
 }
 
 .metric {
@@ -123,26 +238,55 @@
   font-size: 36px;
 }
 
-.tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+.viewTabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 4px;
   margin-bottom: 16px;
 }
 
-.tabs a {
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 8px 12px;
-  background: var(--surface);
+.viewTabs a {
+  border-radius: 6px;
+  padding: 10px 12px;
   color: var(--text-secondary);
+  font-weight: 800;
+  text-align: center;
+}
+
+.viewTabs a[data-active="true"] {
+  background: var(--brand);
+  color: #071427;
+}
+
+.filterBar {
+  display: grid;
+  grid-template-columns: minmax(150px, 220px) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+}
+
+.filterBar label {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-size: 14px;
   font-weight: 800;
 }
 
-.tabs a[data-active="true"] {
-  background: var(--brand);
-  color: white;
-  border-color: var(--brand);
+.filterBar input,
+.filterBar select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-muted);
+  color: var(--text-primary);
+  padding: 10px 12px;
 }
 
 .guestList {
@@ -160,7 +304,7 @@
 
 .guestTable {
   width: 100%;
-  min-width: 880px;
+  min-width: 760px;
   border-collapse: collapse;
 }
 
@@ -187,6 +331,12 @@
 .guestTable td strong {
   display: block;
   min-width: 160px;
+}
+
+.guestTable td span {
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .guestCard {
@@ -273,4 +423,20 @@
 
 .panel h2 {
   margin: 0 0 14px;
+}
+
+@media (max-width: 720px) {
+  .filterBar {
+    grid-template-columns: 1fr;
+  }
+
+  .tableWrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .guestTable {
+    min-width: 760px;
+  }
 }

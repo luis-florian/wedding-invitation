@@ -18,16 +18,16 @@ export default async function AdminDashboardPage() {
       </div>
 
       <section className="grid four">
-        <Metric label="Total principales" value={stats.total} />
-        <Metric label="Confirmados" value={stats.confirmed} />
-        <Metric label="Pendientes" value={stats.pending} />
-        <Metric label="No asistiran" value={stats.declined} />
+        <Metric label="Total personas" value={stats.totalPeople} />
+        <Metric label="Confirmados" value={stats.confirmedPeople} />
+        <Metric label="Pendientes" value={stats.pendingPeople} />
+        <Metric label="No asistiran" value={stats.declinedPeople} />
       </section>
 
-      <section className="grid two" style={{ marginTop: 16 }}>
-        <Metric label="Invitados novio" value={stats.groom} />
-        <Metric label="Invitados novia" value={stats.bride} />
-        <Metric label="Sub invitados" value={stats.companions} />
+      <section className="grid three" style={{ marginTop: 16 }}>
+        <Metric label="Personas novio" value={stats.groomPeople} />
+        <Metric label="Personas novia" value={stats.bridePeople} />
+        <Metric label="Invitados principales" value={stats.total} />
       </section>
     </main>
   );

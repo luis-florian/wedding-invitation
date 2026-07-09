@@ -1,5 +1,6 @@
 import { ArrowLeft, Trash2 } from "lucide-react";
 import {
+  convertGuestToCompanionAction,
   createCompanionAction,
   deleteCompanionAction,
   deleteGuestAction,
@@ -19,15 +20,18 @@ import { CopyInviteButton } from "./CopyInviteButton";
 import styles from "./admin.module.css";
 
 type GuestDetail = NonNullable<Awaited<ReturnType<typeof getGuestById>>>;
+type AssignableGuest = Pick<GuestDetail, "id" | "name" | "status">;
 
 const statuses: RsvpStatus[] = ["pending", "confirmed", "declined"];
 
 export function GuestEditor({
   guest,
-  adminSide
+  adminSide,
+  assignableGuests
 }: {
   guest: GuestDetail;
   adminSide: AdminSide;
+  assignableGuests: AssignableGuest[];
 }) {
   const canEdit = canEditSide(adminSide, guest.ownerSide);
   const invitationUrl = buildInvitationUrl(guest.token);
@@ -77,7 +81,6 @@ export function GuestEditor({
           <input type="hidden" name="id" value={guest.id} />
           <input type="hidden" name="ownerSide" value={guest.ownerSide} />
           <TextField label="Nombre" name="name" defaultValue={guest.name} required disabled={!canEdit} />
-          <TextField label="Telefono" name="phone" defaultValue={guest.phone ?? ""} disabled={!canEdit} />
           <StatusSelect name="status" defaultValue={guest.status} disabled={!canEdit} />
           {canEdit ? <Button type="submit">Guardar invitado</Button> : null}
         </form>
@@ -124,6 +127,29 @@ export function GuestEditor({
           ) : null}
         </div>
       </section>
+
+      {canEdit ? (
+        <section className={styles.panel}>
+          <h2>Asignar invitado existente</h2>
+          <form action={convertGuestToCompanionAction} className={styles.inlineForm}>
+            <input type="hidden" name="targetGuestId" value={guest.id} />
+            <SelectField label="Invitado" name="sourceGuestId" required>
+              <option value="">Selecciona un invitado</option>
+              {assignableGuests.map((candidate) => (
+                <option value={candidate.id} key={candidate.id}>
+                  {candidate.name} · {statusLabels[candidate.status]}
+                </option>
+              ))}
+            </SelectField>
+            <Button type="submit" variant="secondary" disabled={assignableGuests.length === 0}>
+              Convertir en sub invitado
+            </Button>
+          </form>
+          {assignableGuests.length === 0 ? (
+            <p className="muted">No hay invitados disponibles para convertir.</p>
+          ) : null}
+        </section>
+      ) : null}
 
       {canEdit ? (
         <section className={styles.panel}>

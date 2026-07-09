@@ -9,16 +9,16 @@
 }
 
 .pending {
-  background: #f3e6c7;
+  background: var(--status-pending-bg, #f3e6c7);
   color: var(--warning);
 }
 
 .confirmed {
-  background: #e4efe3;
+  background: var(--status-confirmed-bg, #e4efe3);
   color: var(--accent);
 }
 
 .declined {
-  background: #f6e1de;
+  background: var(--status-declined-bg, #f6e1de);
   color: var(--danger);
 }

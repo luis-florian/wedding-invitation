@@ -18,6 +18,7 @@ import { createAdminSession, clearAdminSession, requireAdmin } from "@/lib/auth"
 import { createGuestToken } from "@/lib/tokens";
 import {
   companionFormSchema,
+  convertGuestToCompanionSchema,
   guestFormSchema,
   loginSchema,
   setupAdminsSchema,
@@ -180,7 +181,7 @@ export async function createGuestAction(formData: FormData) {
     throw new Error("No puedes crear invitados del otro lado");
   }
 
-  await db.insert(guests).values({
+  const [created] = await db.insert(guests).values({
     weddingId: wedding.id,
     name: parsed.name,
     phone: parsed.phone || null,
@@ -188,10 +189,11 @@ export async function createGuestAction(formData: FormData) {
     status: parsed.status,
     respondedAt: parsed.status === "pending" ? null : new Date(),
     token: createGuestToken()
-  });
+  }).returning({ id: guests.id });
 
   revalidatePath("/admin");
   revalidatePath("/admin/guests");
+  redirect(`/admin/guests/${created.id}`);
 }
 
 export async function updateGuestAction(formData: FormData) {
@@ -338,6 +340,61 @@ export async function deleteCompanionAction(formData: FormData) {
   revalidatePath("/admin/guests");
   revalidatePath(`/admin/guests/${companion.guestId}`);
   revalidatePath(`/i/${companion.token}`);
+}
+
+export async function convertGuestToCompanionAction(formData: FormData) {
+  const admin = await requireAdmin();
+  const db = getDb();
+  const parsed = convertGuestToCompanionSchema.parse({
+    sourceGuestId: formData.get("sourceGuestId"),
+    targetGuestId: formData.get("targetGuestId")
+  });
+
+  if (parsed.sourceGuestId === parsed.targetGuestId) {
+    throw new Error("No puedes convertir un invitado en sub invitado de si mismo");
+  }
+
+  const [target] = await db
+    .select()
+    .from(guests)
+    .where(eq(guests.id, parsed.targetGuestId))
+    .limit(1);
+  const [source] = await db
+    .select()
+    .from(guests)
+    .where(eq(guests.id, parsed.sourceGuestId))
+    .limit(1);
+
+  if (!target || !source || target.ownerSide !== admin.side || source.ownerSide !== admin.side) {
+    throw new Error("No puedes relacionar estos invitados");
+  }
+
+  const [sourceCompanion] = await db
+    .select({ id: guestCompanions.id })
+    .from(guestCompanions)
+    .where(eq(guestCompanions.guestId, source.id))
+    .limit(1);
+
+  if (sourceCompanion) {
+    throw new Error("Este invitado ya tiene sub invitados. Muevelos o elige otro invitado.");
+  }
+
+  await db.transaction(async (tx) => {
+    await tx.insert(guestCompanions).values({
+      guestId: target.id,
+      name: source.name,
+      status: source.status,
+      respondedAt: source.respondedAt
+    });
+    await tx.delete(guests).where(eq(guests.id, source.id));
+  });
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/guests");
+  revalidatePath(`/admin/guests/${target.id}`);
+  revalidatePath(`/i/${target.token}`);
+  revalidatePath(`/i/${source.token}`);
+  redirect(`/admin/guests/${target.id}`);
 }
 
 export async function updateWeddingAction(formData: FormData) {

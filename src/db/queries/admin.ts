@@ -113,7 +113,13 @@ export async function getDashboardStats() {
       declined: 0,
       groom: 0,
       bride: 0,
-      companions: 0
+      companions: 0,
+      totalPeople: 0,
+      confirmedPeople: 0,
+      pendingPeople: 0,
+      declinedPeople: 0,
+      groomPeople: 0,
+      bridePeople: 0
     };
   }
 
@@ -131,7 +137,12 @@ export async function getDashboardStats() {
 
   const [companionStats] = await db
     .select({
-      total: sql<number>`count(*)::int`
+      total: sql<number>`count(*)::int`,
+      confirmed: sql<number>`count(*) filter (where ${guestCompanions.status} = 'confirmed')::int`,
+      pending: sql<number>`count(*) filter (where ${guestCompanions.status} = 'pending')::int`,
+      declined: sql<number>`count(*) filter (where ${guestCompanions.status} = 'declined')::int`,
+      groom: sql<number>`count(*) filter (where ${guests.ownerSide} = 'groom')::int`,
+      bride: sql<number>`count(*) filter (where ${guests.ownerSide} = 'bride')::int`
     })
     .from(guestCompanions)
     .innerJoin(guests, eq(guestCompanions.guestId, guests.id))
@@ -139,6 +150,12 @@ export async function getDashboardStats() {
 
   return {
     ...guestStats,
-    companions: companionStats.total
+    companions: companionStats.total,
+    totalPeople: guestStats.total + companionStats.total,
+    confirmedPeople: guestStats.confirmed + companionStats.confirmed,
+    pendingPeople: guestStats.pending + companionStats.pending,
+    declinedPeople: guestStats.declined + companionStats.declined,
+    groomPeople: guestStats.groom + companionStats.groom,
+    bridePeople: guestStats.bride + companionStats.bride
   };
 }
