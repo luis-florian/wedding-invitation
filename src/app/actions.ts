@@ -224,6 +224,7 @@ export async function updateGuestAction(formData: FormData) {
 
   revalidatePath("/admin");
   revalidatePath("/admin/guests");
+  revalidatePath(`/admin/guests/${id}`);
   revalidatePath(`/i/${guest.token}`);
 }
 
@@ -240,6 +241,7 @@ export async function deleteGuestAction(formData: FormData) {
   await db.delete(guests).where(eq(guests.id, id));
   revalidatePath("/admin");
   revalidatePath("/admin/guests");
+  redirect("/admin/guests");
 }
 
 export async function createCompanionAction(formData: FormData) {
@@ -265,6 +267,7 @@ export async function createCompanionAction(formData: FormData) {
 
   revalidatePath("/admin");
   revalidatePath("/admin/guests");
+  revalidatePath(`/admin/guests/${guest.id}`);
   revalidatePath(`/i/${guest.token}`);
 }
 
@@ -306,6 +309,7 @@ export async function updateCompanionAction(formData: FormData) {
 
   revalidatePath("/admin");
   revalidatePath("/admin/guests");
+  revalidatePath(`/admin/guests/${companion.guestId}`);
   revalidatePath(`/i/${companion.token}`);
 }
 
@@ -316,6 +320,7 @@ export async function deleteCompanionAction(formData: FormData) {
   const [companion] = await db
     .select({
       id: guestCompanions.id,
+      guestId: guestCompanions.guestId,
       token: guests.token,
       ownerSide: guests.ownerSide
     })
@@ -331,6 +336,7 @@ export async function deleteCompanionAction(formData: FormData) {
   await db.delete(guestCompanions).where(eq(guestCompanions.id, id));
   revalidatePath("/admin");
   revalidatePath("/admin/guests");
+  revalidatePath(`/admin/guests/${companion.guestId}`);
   revalidatePath(`/i/${companion.token}`);
 }
 

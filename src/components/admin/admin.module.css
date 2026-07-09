@@ -150,6 +150,45 @@
   gap: 16px;
 }
 
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  -webkit-overflow-scrolling: touch;
+}
+
+.guestTable {
+  width: 100%;
+  min-width: 880px;
+  border-collapse: collapse;
+}
+
+.guestTable th,
+.guestTable td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.guestTable th {
+  color: var(--text-secondary);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--surface-soft);
+}
+
+.guestTable tr:last-child td {
+  border-bottom: 0;
+}
+
+.guestTable td strong {
+  display: block;
+  min-width: 160px;
+}
+
 .guestCard {
   display: grid;
   gap: 16px;
@@ -215,4 +254,23 @@
 
 .companions h4 {
   margin: 0;
+}
+
+.editSummary {
+  display: grid;
+  gap: 14px;
+}
+
+.editSummary > div {
+  display: grid;
+  gap: 6px;
+}
+
+.editSummary code {
+  overflow-wrap: anywhere;
+  color: var(--text-secondary);
+}
+
+.panel h2 {
+  margin: 0 0 14px;
 }

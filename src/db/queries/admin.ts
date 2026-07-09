@@ -44,6 +44,64 @@ export async function getGuestRows(view: GuestView = "all", status?: RsvpStatus)
   }));
 }
 
+export async function getGuestById(id: string) {
+  const db = getDb();
+  const [guest] = await db.select().from(guests).where(eq(guests.id, id)).limit(1);
+  if (!guest) return null;
+
+  const companions = await db
+    .select()
+    .from(guestCompanions)
+    .where(eq(guestCompanions.guestId, guest.id))
+    .orderBy(asc(guestCompanions.sortOrder), asc(guestCompanions.createdAt));
+
+  return { ...guest, companions };
+}
+
+export async function getGuestTableRows(view: GuestView = "all", status?: RsvpStatus) {
+  const guestRows = await getGuestRows(view);
+
+  return guestRows
+    .flatMap((guest) => {
+      const people = [
+        {
+          id: guest.id,
+          rowType: "principal" as const,
+          name: guest.name,
+          phone: guest.phone,
+          status: guest.status,
+          ownerSide: guest.ownerSide,
+          principalName: guest.name,
+          guestId: guest.id,
+          token: guest.token,
+          canCopyLink: true
+        },
+        ...guest.companions.map((companion) => ({
+          id: companion.id,
+          rowType: "sub" as const,
+          name: companion.name,
+          phone: null,
+          status: companion.status,
+          ownerSide: guest.ownerSide,
+          principalName: guest.name,
+          guestId: guest.id,
+          token: guest.token,
+          canCopyLink: false
+        }))
+      ];
+
+      return status ? people.filter((person) => person.status === status) : people;
+    })
+    .sort((first, second) => {
+      const sideCompare = first.ownerSide.localeCompare(second.ownerSide);
+      if (sideCompare !== 0) return sideCompare;
+      const principalCompare = first.principalName.localeCompare(second.principalName);
+      if (principalCompare !== 0) return principalCompare;
+      if (first.rowType !== second.rowType) return first.rowType === "principal" ? -1 : 1;
+      return first.name.localeCompare(second.name);
+    });
+}
+
 export async function getDashboardStats() {
   const db = getDb();
   const wedding = await getMainWedding();
