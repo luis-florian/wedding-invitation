@@ -56,6 +56,11 @@
   position: relative;
 }
 
+.desktopNav,
+.desktopLogout {
+  display: none;
+}
+
 .navMenu summary {
   width: 44px;
   height: 44px;
@@ -91,7 +96,11 @@
   display: none;
 }
 
-.nav nav,
+.desktopNav {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .navPanel form {
   display: flex;
   flex-wrap: wrap;
@@ -125,32 +134,13 @@
     grid-template-columns: 1fr auto auto;
   }
 
-  .navMenu {
-    display: contents;
-  }
-
-  .navMenu summary {
-    display: none;
-  }
-
-  .navMenu:not([open]) .navPanel,
-  .navPanel {
-    position: static;
-    width: auto;
-    display: contents;
-    border: 0;
-    background: transparent;
-    box-shadow: none;
-    padding: 0;
-  }
-
-  .navPanel form {
-    border-top: 0;
-    padding-top: 0;
-  }
-
-  .navPanel nav {
+  .desktopNav,
+  .desktopLogout {
     display: flex;
+  }
+
+  .navMenu {
+    display: none;
   }
 }
 
@@ -389,6 +379,13 @@
   align-items: end;
 }
 
+.assignForm {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+}
+
 .locked {
   display: inline-flex;
   align-items: center;
@@ -427,6 +424,10 @@
 
 @media (max-width: 720px) {
   .filterBar {
+    grid-template-columns: 1fr;
+  }
+
+  .assignForm {
     grid-template-columns: 1fr;
   }
 

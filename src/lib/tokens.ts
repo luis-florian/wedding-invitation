@@ -5,6 +5,11 @@ export function createGuestToken() {
 }
 
 export function buildInvitationUrl(token: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    process.env.SITE_URL ??
+    (vercelUrl ? `https://${vercelUrl}` : "http://localhost:3000");
+
   return `${baseUrl.replace(/\/$/, "")}/i/${token}`;
 }

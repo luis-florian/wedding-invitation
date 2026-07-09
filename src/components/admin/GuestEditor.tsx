@@ -131,7 +131,7 @@ export function GuestEditor({
       {canEdit ? (
         <section className={styles.panel}>
           <h2>Asignar invitado existente</h2>
-          <form action={convertGuestToCompanionAction} className={styles.inlineForm}>
+          <form action={convertGuestToCompanionAction} className={styles.assignForm}>
             <input type="hidden" name="targetGuestId" value={guest.id} />
             <SelectField label="Invitado" name="sourceGuestId" required>
               <option value="">Selecciona un invitado</option>

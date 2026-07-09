@@ -56,7 +56,7 @@ export function GuestsTable({
                   <StatusBadge status={row.status} />
                 </td>
                 <td data-label="Link">
-                  {row.rowType === "principal" ? <CopyInviteButton url={invitationUrl} /> : <span className="muted">Mismo link</span>}
+                  <CopyInviteButton url={invitationUrl} />
                 </td>
                 <td data-label="Editar">
                   <ButtonLink

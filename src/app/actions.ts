@@ -365,29 +365,30 @@ export async function convertGuestToCompanionAction(formData: FormData) {
     .where(eq(guests.id, parsed.sourceGuestId))
     .limit(1);
 
-  if (!target || !source || target.ownerSide !== admin.side || source.ownerSide !== admin.side) {
+  if (
+    !target ||
+    !source ||
+    target.ownerSide !== admin.side ||
+    source.ownerSide !== admin.side ||
+    target.weddingId !== source.weddingId
+  ) {
     throw new Error("No puedes relacionar estos invitados");
   }
 
-  const [sourceCompanion] = await db
-    .select({ id: guestCompanions.id })
-    .from(guestCompanions)
-    .where(eq(guestCompanions.guestId, source.id))
-    .limit(1);
-
-  if (sourceCompanion) {
-    throw new Error("Este invitado ya tiene sub invitados. Muevelos o elige otro invitado.");
-  }
-
-  await db.transaction(async (tx) => {
-    await tx.insert(guestCompanions).values({
-      guestId: target.id,
-      name: source.name,
-      status: source.status,
-      respondedAt: source.respondedAt
-    });
-    await tx.delete(guests).where(eq(guests.id, source.id));
+  await db.insert(guestCompanions).values({
+    guestId: target.id,
+    name: source.name,
+    status: source.status,
+    respondedAt: source.respondedAt
   });
+  await db
+    .update(guestCompanions)
+    .set({
+      guestId: target.id,
+      updatedAt: new Date()
+    })
+    .where(eq(guestCompanions.guestId, source.id));
+  await db.delete(guests).where(eq(guests.id, source.id));
 
   revalidatePath("/admin");
   revalidatePath("/admin/guests");
