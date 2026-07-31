@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     locale: "es_GT",
     images: [
       {
-        url: "/og-nathaly-luis.png",
+        url: "/og-nathaly-luis.jpg",
         width: 1424,
         height: 752,
         alt: "Nathaly y Luis | Nuestra boda"
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Nathaly & Luis | Nuestra boda 💍",
     description: "Consulta todos los detalles del evento y confirma tu asistencia. ¡Te esperamos!",
-    images: ["/og-nathaly-luis.png"]
+    images: ["/og-nathaly-luis.jpg"]
   }
 };
 
