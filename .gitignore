@@ -8,3 +8,4 @@ coverage/
 *.log
 *.tsbuildinfo
 .neon
+.DS_Store

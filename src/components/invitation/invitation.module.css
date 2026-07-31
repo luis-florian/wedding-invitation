@@ -7,6 +7,7 @@
 }
 
 .page {
+  --hero-peek: clamp(58px, 7vw, 84px);
   min-height: 100vh;
   overflow-x: hidden;
   background: #e8dfd0;
@@ -38,7 +39,8 @@
 .hero {
   position: relative;
   display: grid;
-  min-height: min(720px, 100svh);
+  height: 100dvh;
+  min-height: 100dvh;
   align-items: start;
   justify-items: center;
   overflow: hidden;
@@ -96,7 +98,7 @@
 .heroMeta {
   position: absolute;
   right: clamp(24px, 6vw, 90px);
-  bottom: clamp(26px, 4vw, 44px);
+  bottom: calc(var(--hero-peek) + clamp(22px, 3vw, 38px));
   left: clamp(24px, 6vw, 90px);
   display: flex;
   align-items: center;
@@ -112,8 +114,11 @@
 }
 
 .storyNav {
+  position: relative;
+  z-index: 1;
   display: grid;
   min-height: 580px;
+  margin-top: calc(0px - var(--hero-peek));
   place-items: center;
   padding: clamp(44px, 7vw, 86px) 24px;
   background-image:
@@ -633,6 +638,16 @@
   line-height: 1.35;
 }
 
+.rsvpPrompt span {
+  display: block;
+  margin-top: 18px;
+  color: rgb(244 238 227 / 88%);
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: clamp(12px, 1.7vw, 16px);
+  letter-spacing: 0.05em;
+  line-height: 1.5;
+}
+
 .rsvp {
   padding: clamp(48px, 9vw, 88px) 18px;
   background: #a39888;
@@ -640,8 +655,7 @@
 }
 
 .rsvpHeader,
-.rsvpForm,
-.successPanel {
+.rsvpForm {
   width: min(100%, 760px);
   margin: 0 auto;
 }
@@ -680,15 +694,38 @@
   line-height: 1.65;
 }
 
+.rsvpToast {
+  width: min(100%, 760px);
+  margin: 22px auto 0;
+  border: 1px solid rgb(66 55 42 / 48%);
+  padding: 12px 16px;
+  background: rgb(255 248 235 / 72%);
+  color: #352b22;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.rsvpToast[data-tone="error"] {
+  border-color: rgb(119 66 54 / 60%);
+  background: rgb(250 229 220 / 72%);
+  color: #6a3228;
+}
+
 .rsvpForm {
   display: grid;
   gap: 22px;
   margin-top: 30px;
+  transition: opacity 180ms ease;
+}
+
+.rsvpForm[aria-busy="true"] {
+  opacity: 0.72;
 }
 
 .person {
   display: grid;
-  gap: 14px;
+  gap: 20px;
   min-width: 0;
   margin: 0;
   border: 0;
@@ -696,6 +733,7 @@
 }
 
 .person legend {
+  margin: 0 0 24px;
   padding: 0;
   color: #302820;
   font-family: var(--font-serif), Georgia, serif;
@@ -712,6 +750,10 @@
 
 .statusCard {
   cursor: pointer;
+}
+
+.person:disabled .statusCard {
+  cursor: wait;
 }
 
 .statusCard input {
@@ -768,12 +810,14 @@
 .statusCard input:checked + .statusCardBody {
   border-color: #4b3c2d;
   background: #f8f0e4;
+  box-shadow: 0 0 0 2px rgb(75 60 45 / 40%);
   transform: translateY(-1px);
 }
 
 .statusCard input:checked + .statusCardBody .statusIcon {
   background: #4b3c2d;
   color: #fff8eb;
+  transform: scale(1.08);
 }
 
 .statusCard input:focus-visible + .statusCardBody {
@@ -781,61 +825,28 @@
   outline-offset: 3px;
 }
 
-.submitButton {
-  width: 100%;
-  min-height: 56px;
-  margin-top: 8px;
-  border-radius: 0;
-  background: #594331;
-  color: #fff8eb;
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.submitButton:hover {
-  background: #403021;
-}
-
-.successPanel {
-  display: grid;
-  justify-items: center;
-  gap: 12px;
-  margin-top: 34px;
-  text-align: center;
-}
-
-.successPanel svg {
-  color: #4b3c2d;
-}
-
-.successPanel h3 {
-  margin: 0;
-  color: #302820;
-  font-family: var(--font-serif), Georgia, serif;
-  font-size: clamp(34px, 8vw, 54px);
-  font-weight: 600;
-  line-height: 1;
-}
-
-.successPanel p {
-  max-width: 34ch;
-  margin: 0;
-  color: #3f342a;
-  line-height: 1.65;
-}
-
-.changeResponse {
-  min-height: 48px;
-  margin-top: 8px;
-  border: 1px solid #493b2d;
-  padding: 10px 18px;
+.pendingResponse {
+  justify-self: start;
+  border: 0;
+  padding: 2px 0;
   background: transparent;
-  color: #302820;
+  color: #493b2d;
+  cursor: pointer;
   font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.pendingResponse:focus-visible {
+  outline: 2px solid #493b2d;
+  outline-offset: 4px;
+}
+
+.pendingResponse:disabled {
+  cursor: wait;
 }
 
 .countdown {
@@ -964,8 +975,13 @@
 }
 
 @media (max-width: 719px) {
+  .page {
+    --hero-peek: 56px;
+  }
+
   .hero {
-    min-height: 86svh;
+    height: 100dvh;
+    min-height: 100dvh;
     padding: 66px 18px 120px;
     background-position: center 35%;
   }
@@ -973,7 +989,7 @@
   .heroNames {
     font-size: clamp(52px, 16vw, 76px);
     line-height: 0.82;
-    transform: translateX(3%);
+    transform: translateX(-1%);
   }
 
   .heroAmp {
@@ -988,7 +1004,7 @@
 
   .heroMeta {
     right: 18px;
-    bottom: 26px;
+    bottom: calc(var(--hero-peek) + 22px);
     left: 18px;
     display: grid;
     gap: 72px;
@@ -1151,7 +1167,7 @@
   }
 
   .place {
-    font-size: 17px;
+    font-size: 21px;
   }
 
   .eventContent p:not(.place) {
@@ -1236,6 +1252,12 @@
     font-size: 22px;
     letter-spacing: 0.22em;
     line-height: 1.45;
+  }
+
+  .rsvpPrompt span {
+    max-width: 280px;
+    margin: 16px auto 0;
+    font-size: 12px;
   }
 
   .rsvpHeader {

@@ -18,7 +18,6 @@ type InvitationPageProps = {
   guest: Guest;
   events: WeddingEvent[];
   companions: GuestCompanion[];
-  saved?: boolean;
 };
 
 const weddingDateIso = "2026-10-10T15:00:00-06:00";
@@ -26,8 +25,7 @@ const weddingDateIso = "2026-10-10T15:00:00-06:00";
 export function InvitationPage({
   guest,
   events,
-  companions,
-  saved = false
+  companions
 }: InvitationPageProps) {
   const action = updateRsvpAction.bind(null, guest.token);
   const ceremonyLinks = getMapLinks(events[0]);
@@ -84,7 +82,7 @@ export function InvitationPage({
             certeza de que no era casualidad.
           </p>
           <p>
-            <strong>Hoy creemos que nuestra historia fue escrita por la mano de Dios:</strong> con
+            <strong>Hoy creemos que nuestra historia fue escrita por la mano de Dios: </strong> con
             un comienzo inesperado, cap&iacute;tulos llenos de aventura, felicidad y un amor vibrante,
             sellado con una promesa para toda la vida.
           </p>
@@ -194,6 +192,7 @@ export function InvitationPage({
       <section className={styles.rsvpPrompt} aria-label="Ir a confirmaci&oacute;n">
         <div>
           <p>Necesitamos tu confirmaci&oacute;n</p>
+          <span>Por favor, responde antes del 1 de septiembre.</span>
         </div>
       </section>
 
@@ -201,8 +200,6 @@ export function InvitationPage({
         action={action}
         guest={guest}
         companions={companions}
-        saved={saved}
-        weddingDate={weddingDateIso}
       />
 
       <Countdown targetDate={weddingDateIso} />

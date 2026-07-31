@@ -132,36 +132,53 @@ export async function updateRsvpAction(token: string, formData: FormData) {
   if (!guest) redirect(`/i/${token}?error=not-found`);
 
   const now = new Date();
-  await db
-    .update(guests)
-    .set({
-      status: statusFromForm(formData.get("guestStatus")),
-      respondedAt: now,
-      updatedAt: now
-    })
-    .where(eq(guests.id, guest.id));
+  let guestStatus = guest.status;
+  let changed = false;
+  const guestValue = formData.get("guestStatus");
+
+  if (guestValue) {
+    const nextStatus = statusFromForm(guestValue);
+    if (nextStatus !== guest.status) {
+      await db
+        .update(guests)
+        .set({
+          status: nextStatus,
+          respondedAt: now,
+          updatedAt: now
+        })
+        .where(eq(guests.id, guest.id));
+      guestStatus = nextStatus;
+      changed = true;
+    }
+  }
 
   const companions = await db
-    .select({ id: guestCompanions.id })
+    .select({ id: guestCompanions.id, status: guestCompanions.status })
     .from(guestCompanions)
     .where(eq(guestCompanions.guestId, guest.id));
 
   for (const companion of companions) {
     const value = formData.get(`companion:${companion.id}`);
     if (!value) continue;
+    const nextStatus = statusFromForm(value);
+    if (nextStatus === companion.status) continue;
     await db
       .update(guestCompanions)
       .set({
-        status: statusFromForm(value),
+        status: nextStatus,
         respondedAt: now,
         updatedAt: now
       })
       .where(and(eq(guestCompanions.id, companion.id), eq(guestCompanions.guestId, guest.id)));
+    changed = true;
   }
 
-  revalidatePath(`/i/${token}`);
-  revalidatePath("/admin");
-  redirect(`/i/${token}?saved=1`);
+  if (changed) {
+    revalidatePath(`/i/${token}`);
+    revalidatePath("/admin");
+  }
+
+  return { changed, guestStatus };
 }
 
 export async function createGuestAction(formData: FormData) {
