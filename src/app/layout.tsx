@@ -19,9 +19,36 @@ const cardo = Cardo({
   weight: "400"
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "https://nathalyluis.com");
+
 export const metadata: Metadata = {
-  title: "Wedding RSVP",
-  description: "Invitacion digital con confirmacion de asistencia"
+  metadataBase: new URL(siteUrl),
+  title: "Nathaly & Luis | Nuestra boda 💍",
+  description: "Consulta todos los detalles del evento y confirma tu asistencia. ¡Te esperamos!",
+  openGraph: {
+    title: "Nathaly & Luis | Nuestra boda 💍",
+    description: "Consulta todos los detalles del evento y confirma tu asistencia. ¡Te esperamos!",
+    type: "website",
+    locale: "es_GT",
+    images: [
+      {
+        url: "/og-nathaly-luis.png",
+        width: 1424,
+        height: 752,
+        alt: "Nathaly y Luis | Nuestra boda"
+      }
+    ]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nathaly & Luis | Nuestra boda 💍",
+    description: "Consulta todos los detalles del evento y confirma tu asistencia. ¡Te esperamos!",
+    images: ["/og-nathaly-luis.png"]
+  }
 };
 
 export const viewport: Viewport = {
