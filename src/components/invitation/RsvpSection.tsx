@@ -25,13 +25,13 @@ const answerOptions: Array<{
 }> = [
   {
     status: "confirmed",
-    label: "Si, asistire",
-    description: "Con mucha alegria los acompanare.",
+    label: "Sí, asistiré",
+    description: "Con mucha alegría los acompañaré.",
     icon: "check"
   },
   {
     status: "declined",
-    label: "No podre asistir",
+    label: "No podré asistir",
     description: "Gracias por avisarnos con tiempo.",
     icon: "x"
   }
@@ -44,7 +44,8 @@ export function RsvpSection({
   saved,
   weddingDate
 }: RsvpSectionProps) {
-  const [isEditing, setIsEditing] = useState(!saved);
+  const hasResponded = saved || guest.status !== "pending";
+  const [isEditing, setIsEditing] = useState(!hasResponded);
   const party = [{ id: guest.id, name: guest.name, status: guest.status, fieldName: "guestStatus" }].concat(
     companions.map((companion) => ({
       id: companion.id,
@@ -55,19 +56,19 @@ export function RsvpSection({
   );
 
   return (
-    <section className={styles.rsvp} aria-labelledby="rsvp-title">
+    <section className={styles.rsvp} id="rsvp" aria-labelledby="rsvp-title">
       <div className={styles.rsvpHeader}>
         <div>
-          <p className={styles.eyebrow}>Confirmacion</p>
-          <h2 id="rsvp-title">Hola, {guest.name}.</h2>
+          <p>Confirmaci&oacute;n</p>
+          <h2 id="rsvp-title">Hola, {guest.name}</h2>
         </div>
         <StatusBadge status={guest.status} />
       </div>
 
-      {saved && !isEditing ? (
+      {hasResponded && !isEditing ? (
         <div className={styles.successPanel}>
           <CheckCircle2 size={34} aria-hidden="true" />
-          <h3>Confirmacion recibida</h3>
+          <h3>Confirmaci&oacute;n recibida</h3>
           <p>{successMessage(guest.status, weddingDate)}</p>
           <button type="button" className={styles.changeResponse} onClick={() => setIsEditing(true)}>
             Cambiar respuesta
@@ -76,7 +77,8 @@ export function RsvpSection({
       ) : (
         <>
           <p className={styles.rsvpIntro}>
-            Nos haria mucha ilusion contar con tu presencia. ¿Podras acompanarnos?
+            Nos har&iacute;a mucha ilusi&oacute;n contar con tu presencia. Por favor confirma tu asistencia y
+            la de tus acompa&ntilde;antes.
           </p>
           <form action={action} className={styles.rsvpForm}>
             {party.map((person) => (
@@ -141,10 +143,10 @@ function successMessage(status: RsvpStatus, weddingDate: string) {
   }
 
   if (status === "declined") {
-    return "Gracias por avisarnos. Te extranaremos ese dia.";
+    return "Gracias por avisarnos. Te extrañaremos ese día.";
   }
 
-  return "Muchas gracias. Tu respuesta quedo guardada.";
+  return "Muchas gracias. Tu respuesta quedó guardada.";
 }
 
 function formatShortDate(date: string) {

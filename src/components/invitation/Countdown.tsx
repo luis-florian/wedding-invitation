@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import styles from "./invitation.module.css";
 
 type CountdownProps = {
@@ -15,10 +15,10 @@ type TimeLeft = {
 };
 
 const labels: Array<{ key: keyof TimeLeft; label: string }> = [
-  { key: "days", label: "Dias" },
-  { key: "hours", label: "Horas" },
-  { key: "minutes", label: "Min" },
-  { key: "seconds", label: "Seg" }
+  { key: "days", label: "Days" },
+  { key: "hours", label: "Hours" },
+  { key: "minutes", label: "Minutes" },
+  { key: "seconds", label: "Seconds" }
 ];
 
 export function Countdown({ targetDate }: CountdownProps) {
@@ -34,13 +34,16 @@ export function Countdown({ targetDate }: CountdownProps) {
 
   return (
     <section className={styles.countdown} aria-label="Cuenta regresiva">
-      <p className={styles.eyebrow}>Faltan</p>
+      <p>Nos vemos en...</p>
       <div className={styles.countdownGrid}>
-        {labels.map(({ key, label }) => (
-          <div className={styles.countdownItem} key={key}>
-            <strong>{String(timeLeft[key]).padStart(2, "0")}</strong>
-            <span>{label}</span>
-          </div>
+        {labels.map(({ key, label }, index) => (
+          <Fragment key={key}>
+            <div className={`${styles.countdownItem} ${key === "seconds" ? styles.countdownSeconds : ""}`}>
+              <strong>{String(timeLeft[key]).padStart(2, "0")}</strong>
+              <span>{label}</span>
+            </div>
+            {index < labels.length - 1 ? <i className={styles.countdownSeparator} aria-hidden="true">:</i> : null}
+          </Fragment>
         ))}
       </div>
     </section>

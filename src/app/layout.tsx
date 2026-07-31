@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Cardo, Cormorant_Garamond, Inter } from "next/font/google";
 import "@/styles/globals.css";
 
 const serif = Cormorant_Garamond({
@@ -13,14 +13,25 @@ const sans = Inter({
   variable: "--font-sans"
 });
 
+const cardo = Cardo({
+  subsets: ["latin"],
+  variable: "--font-cardo",
+  weight: "400"
+});
+
 export const metadata: Metadata = {
   title: "Wedding RSVP",
   description: "Invitacion digital con confirmacion de asistencia"
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1
+};
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es" className={`${serif.variable} ${sans.variable}`}>
+    <html lang="es" className={`${serif.variable} ${sans.variable} ${cardo.variable}`}>
       <body>{children}</body>
     </html>
   );
