@@ -27,10 +27,10 @@ const siteUrl =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Nathaly & Luis | Nuestra boda 💍",
+  title: "Nathaly & Luis | Nuestra boda ✨",
   description: "Consulta todos los detalles del evento y confirma tu asistencia. ¡Te esperamos!",
   openGraph: {
-    title: "Nathaly & Luis | Nuestra boda 💍",
+    title: "Nathaly & Luis | Nuestra boda ✨",
     description: "Consulta todos los detalles del evento y confirma tu asistencia. ¡Te esperamos!",
     type: "website",
     locale: "es_GT",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nathaly & Luis | Nuestra boda 💍",
+    title: "Nathaly & Luis | Nuestra boda ✨",
     description: "Consulta todos los detalles del evento y confirma tu asistencia. ¡Te esperamos!",
     images: ["/og-nathaly-luis.jpg"]
   }
