@@ -640,6 +640,26 @@
   text-align: center;
 }
 
+.giftAccounts {
+  display: grid;
+  width: min(100%, 760px);
+  gap: 8px;
+  margin: 16px auto 0;
+  color: #574c3c;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: clamp(13px, 1.7vw, 16px);
+  line-height: 1.55;
+  text-align: center;
+}
+
+.giftAccounts p {
+  margin: 0;
+}
+
+.giftAccounts strong {
+  color: #574c3c;
+}
+
 .rsvpPrompt {
   display: grid;
   min-height: clamp(260px, 28vw, 360px);
@@ -1265,6 +1285,14 @@
   .giftNote {
     width: min(100%, 320px);
     margin-top: 26px;
+  }
+
+  .giftAccounts {
+    width: min(100%, 340px);
+    gap: 10px;
+    margin-top: 14px;
+    font-size: 13px;
+    line-height: 1.6;
   }
 
   .rsvpPrompt {

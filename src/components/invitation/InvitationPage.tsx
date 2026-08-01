@@ -188,9 +188,15 @@ export function InvitationPage({
           </DetailItem>
         </div>
         <p className={styles.giftNote}>
-          Pero, si desean regalarnos algo m&aacute;s, preferimos que sea en efectivo.
+          Pero si desean regalarnos algo m&aacute;s, preferimos que sea en efectivo o
+          transferencia a cualquiera de las siguientes cuentas:
         </p>
-        <p className={styles.giftNote}>Cada regalito ser&aacute; para equipar nuestro nuevo hogar &#9825;</p>
+        <div className={styles.giftAccounts}>
+          <p><strong>GT:Q</strong> · Cuenta monetaria: 5370470360 <br></br>Banco Industrial · Luis Florian</p>
+          <p><strong>HN:L</strong> · Cuenta de ahorro: 21 259 002043 5 <br></br>Banco de Occidente · Nathaly Pilo&ntilde;a</p>
+          <p><strong>USD:$</strong> · Cuenta de ahorro: 22 260 000205 9 <br></br>Banco de Occidente · Nathaly Pilo&ntilde;a</p>
+        </div>
+        <p className={styles.giftNote}>Cada regalito nos ayudar&aacute; a equipar nuestro nuevo hogar &#9825;</p>
       </section>
 
       <section className={styles.rsvpPrompt} aria-label="Ir a confirmaci&oacute;n">
