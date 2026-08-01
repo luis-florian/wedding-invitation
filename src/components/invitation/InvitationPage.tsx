@@ -2,6 +2,7 @@ import Image from "next/image";
 import {
   BookOpen,
   CalendarCheck,
+  ChevronDown,
   ChevronRight,
   Heart,
   MapPin,
@@ -42,13 +43,16 @@ export function InvitationPage({
           </h1>
           <p>&iexcl;Se casan!</p>
         </div>
-        <div className={styles.heroMeta} aria-hidden="true">
+        <div className={styles.heroMeta}>
           <span>Octubre 10 2026, 3:00 PM</span>
+          <a className={styles.heroScrollCue} href="#navigation" aria-label="Ver la invitación">
+            <ChevronDown size={24} />
+          </a>
           <span>Antigua Guatemala</span>
         </div>
       </section>
 
-      <section className={styles.storyNav} aria-label="Secciones de la invitaci&oacute;n">
+      <section className={styles.storyNav} id="navigation" aria-label="Secciones de la invitaci&oacute;n">
         <nav className={styles.navLinks}>
           <NavCard href="#love-story" icon={<Heart size={28} aria-hidden="true" />}>
             Love story
