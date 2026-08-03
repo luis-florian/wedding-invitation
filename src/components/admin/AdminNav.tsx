@@ -4,6 +4,7 @@ import { logoutAction } from "@/app/actions";
 import type { AdminSession } from "@/lib/auth";
 import { sideLabels } from "@/lib/format";
 import { Button } from "@/components/ui/Button";
+import { MobileNavLink } from "./MobileNavLink";
 import styles from "./admin.module.css";
 
 export function AdminNav({ admin }: { admin: AdminSession }) {
@@ -16,6 +17,7 @@ export function AdminNav({ admin }: { admin: AdminSession }) {
       <nav className={styles.desktopNav} aria-label="Administracion">
         <Link href="/admin">Dashboard</Link>
         <Link href="/admin/guests">Invitados</Link>
+        <Link href="/admin/notes">Notas</Link>
         <Link href="/admin/wedding">Boda</Link>
       </nav>
       <form action={logoutAction} className={styles.desktopLogout}>
@@ -30,9 +32,10 @@ export function AdminNav({ admin }: { admin: AdminSession }) {
         </summary>
         <div className={styles.navPanel}>
           <nav aria-label="Administracion">
-            <Link href="/admin">Dashboard</Link>
-            <Link href="/admin/guests">Invitados</Link>
-            <Link href="/admin/wedding">Boda</Link>
+            <MobileNavLink href="/admin">Dashboard</MobileNavLink>
+            <MobileNavLink href="/admin/guests">Invitados</MobileNavLink>
+            <MobileNavLink href="/admin/notes">Notas</MobileNavLink>
+            <MobileNavLink href="/admin/wedding">Boda</MobileNavLink>
           </nav>
           <form action={logoutAction}>
             <Button type="submit" variant="ghost" title="Cerrar sesion">

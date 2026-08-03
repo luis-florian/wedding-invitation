@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { parseGuestView, parseStatusFilter } from "@/lib/admin-filters";
+import {
+  parseGuestView,
+  parseInvitationSentFilter,
+  parseStatusFilter
+} from "@/lib/admin-filters";
 
 describe("admin filters", () => {
   it("parses guest views", () => {
@@ -14,5 +18,11 @@ describe("admin filters", () => {
     expect(parseStatusFilter("confirmed")).toBe("confirmed");
     expect(parseStatusFilter("declined")).toBe("declined");
     expect(parseStatusFilter("other")).toBeUndefined();
+  });
+
+  it("parses invitation sent filters", () => {
+    expect(parseInvitationSentFilter("true")).toBe(true);
+    expect(parseInvitationSentFilter("false")).toBe(false);
+    expect(parseInvitationSentFilter("other")).toBeUndefined();
   });
 });

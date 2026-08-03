@@ -8,6 +8,20 @@
       "when": 1783486889261,
       "tag": "0000_previous_giant_man",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1785731289688,
+      "tag": "0001_wide_sir_ram",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785734217243,
+      "tag": "0002_cuddly_gambit",
+      "breakpoints": true
     }
   ]
 }

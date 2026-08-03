@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getDb } from "@/db";
 import {
+  adminNotes,
   adminUsers,
   guestCompanions,
   guests,
@@ -16,7 +17,9 @@ import {
 import { getMainWedding, getWeddingWithEvents } from "@/db/queries/wedding";
 import { createAdminSession, clearAdminSession, requireAdmin } from "@/lib/auth";
 import { createGuestToken } from "@/lib/tokens";
+import { normalizeSearchText } from "@/lib/text";
 import {
+  adminNoteFormSchema,
   companionFormSchema,
   convertGuestToCompanionSchema,
   guestFormSchema,
@@ -34,6 +37,18 @@ function nullable(value: FormDataEntryValue | null) {
 
 function statusFromForm(value: FormDataEntryValue | null): RsvpStatus {
   return rsvpStatusSchema.parse(value);
+}
+
+function returnToFromForm(value: FormDataEntryValue | null) {
+  const path = typeof value === "string" ? value.trim() : "";
+  return path.startsWith("/admin") ? path : null;
+}
+
+function withSavedParam(path: string, value: string) {
+  const [pathname, query = ""] = path.split("?");
+  const params = new URLSearchParams(query);
+  params.set("saved", value);
+  return `${pathname}?${params.toString()}`;
 }
 
 export async function loginAction(_prevState: string | null, formData: FormData) {
@@ -198,6 +213,29 @@ export async function createGuestAction(formData: FormData) {
     throw new Error("No puedes crear invitados del otro lado");
   }
 
+  const confirmDuplicate = formData.get("confirmDuplicate") === "true";
+  if (!confirmDuplicate) {
+    const existingGuests = await db
+      .select({
+        id: guests.id,
+        name: guests.name
+      })
+      .from(guests)
+      .where(and(eq(guests.weddingId, wedding.id), eq(guests.ownerSide, parsed.ownerSide)));
+    const duplicate = existingGuests.find(
+      (guest) => normalizeSearchText(guest.name) === normalizeSearchText(parsed.name)
+    );
+
+    if (duplicate) {
+      const params = new URLSearchParams({
+        name: parsed.name,
+        duplicateId: duplicate.id,
+        duplicateName: duplicate.name
+      });
+      redirect(`/admin/guests/new?${params.toString()}`);
+    }
+  }
+
   const [created] = await db.insert(guests).values({
     weddingId: wedding.id,
     name: parsed.name,
@@ -245,6 +283,35 @@ export async function updateGuestAction(formData: FormData) {
   revalidatePath("/admin/guests");
   revalidatePath(`/admin/guests/${id}`);
   revalidatePath(`/i/${guest.token}`);
+
+  const returnTo = returnToFromForm(formData.get("returnTo"));
+  if (returnTo) redirect(withSavedParam(returnTo, "guest"));
+}
+
+export async function updateInvitationSentAction(guestId: string, invitationSent: boolean) {
+  const admin = await requireAdmin();
+  const db = getDb();
+
+  if (typeof invitationSent !== "boolean") {
+    throw new Error("Valor de envio invalido");
+  }
+
+  const [guest] = await db.select().from(guests).where(eq(guests.id, guestId)).limit(1);
+  if (!guest || guest.ownerSide !== admin.side) {
+    throw new Error("No puedes editar este invitado");
+  }
+
+  await db
+    .update(guests)
+    .set({
+      invitationSent,
+      updatedAt: new Date()
+    })
+    .where(eq(guests.id, guestId));
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/guests");
+  revalidatePath(`/admin/guests/${guestId}`);
 }
 
 export async function deleteGuestAction(formData: FormData) {
@@ -288,6 +355,9 @@ export async function createCompanionAction(formData: FormData) {
   revalidatePath("/admin/guests");
   revalidatePath(`/admin/guests/${guest.id}`);
   revalidatePath(`/i/${guest.token}`);
+
+  const returnTo = returnToFromForm(formData.get("returnTo"));
+  if (returnTo) redirect(withSavedParam(returnTo, "companion-created"));
 }
 
 export async function updateCompanionAction(formData: FormData) {
@@ -330,6 +400,9 @@ export async function updateCompanionAction(formData: FormData) {
   revalidatePath("/admin/guests");
   revalidatePath(`/admin/guests/${companion.guestId}`);
   revalidatePath(`/i/${companion.token}`);
+
+  const returnTo = returnToFromForm(formData.get("returnTo"));
+  if (returnTo) redirect(withSavedParam(returnTo, "companion"));
 }
 
 export async function deleteCompanionAction(formData: FormData) {
@@ -476,4 +549,41 @@ export async function updateWeddingEventAction(formData: FormData) {
     .where(eq(weddingEvents.id, parsed.id));
 
   revalidatePath("/admin/wedding");
+}
+
+export async function updateAdminNoteAction(formData: FormData) {
+  const admin = await requireAdmin();
+  const db = getDb();
+  const parsed = adminNoteFormSchema.parse({
+    side: formData.get("side"),
+    body: formData.get("body") ?? ""
+  });
+
+  if (parsed.side !== admin.side) {
+    throw new Error("No puedes editar esta nota");
+  }
+
+  const [existing] = await db
+    .select()
+    .from(adminNotes)
+    .where(eq(adminNotes.side, parsed.side))
+    .limit(1);
+
+  if (existing) {
+    await db
+      .update(adminNotes)
+      .set({
+        body: parsed.body,
+        updatedAt: new Date()
+      })
+      .where(eq(adminNotes.id, existing.id));
+  } else {
+    await db.insert(adminNotes).values({
+      side: parsed.side,
+      body: parsed.body
+    });
+  }
+
+  revalidatePath("/admin/notes");
+  redirect("/admin/notes?saved=note");
 }

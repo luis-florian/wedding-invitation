@@ -1,0 +1,1 @@
+ALTER TABLE "guests" ADD COLUMN "invitation_sent" boolean DEFAULT false NOT NULL;

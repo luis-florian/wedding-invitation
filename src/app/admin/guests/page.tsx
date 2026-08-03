@@ -1,8 +1,13 @@
 import Link from "next/link";
-import { Plus, Search } from "lucide-react";
+import { Plus, RotateCcw, Search } from "lucide-react";
 import { getGuestTableRows } from "@/db/queries/admin";
 import { requireAdmin } from "@/lib/auth";
-import { parseGuestView, parseStatusFilter } from "@/lib/admin-filters";
+import {
+  parseGuestView,
+  parseInvitationSentFilter,
+  parseStatusFilter
+} from "@/lib/admin-filters";
+import { normalizeSearchText } from "@/lib/text";
 import { statusLabels } from "@/lib/format";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { GuestsTable } from "@/components/admin/GuestsTable";
@@ -11,17 +16,19 @@ import styles from "@/components/admin/admin.module.css";
 export default async function AdminGuestsPage({
   searchParams
 }: {
-  searchParams: Promise<{ view?: string; status?: string; q?: string }>;
+  searchParams: Promise<{ view?: string; status?: string; sent?: string; q?: string }>;
 }) {
   const [admin, query] = await Promise.all([requireAdmin(), searchParams]);
   const view = parseGuestView(query.view);
   const status = parseStatusFilter(query.status);
+  const invitationSent = parseInvitationSentFilter(query.sent);
   const search = typeof query.q === "string" ? query.q.trim() : "";
-  const allRows = await getGuestTableRows(view, status);
+  const normalizedSearch = normalizeSearchText(search);
+  const allRows = await getGuestTableRows(view, status, invitationSent);
   const rows = search
     ? allRows.filter((row) => {
-        const value = `${row.name} ${row.principalName}`.toLowerCase();
-        return value.includes(search.toLowerCase());
+        const value = normalizeSearchText(`${row.name} ${row.principalName}`);
+        return value.includes(normalizedSearch);
       })
     : allRows;
 
@@ -39,9 +46,9 @@ export default async function AdminGuestsPage({
       </div>
 
       <nav className={styles.viewTabs} aria-label="Vistas de invitados">
-        <Tab href={guestHref("all", status)} active={view === "all"}>Todos</Tab>
-        <Tab href={guestHref("groom", status)} active={view === "groom"}>Invitados novio</Tab>
-        <Tab href={guestHref("bride", status)} active={view === "bride"}>Invitados novia</Tab>
+        <Tab href={guestHref("all", { status, invitationSent, search })} active={view === "all"}>Todos</Tab>
+        <Tab href={guestHref("groom", { status, invitationSent, search })} active={view === "groom"}>Invitados novio</Tab>
+        <Tab href={guestHref("bride", { status, invitationSent, search })} active={view === "bride"}>Invitados novia</Tab>
       </nav>
 
       <form className={`${styles.panel} ${styles.filterBar}`} action="/admin/guests">
@@ -56,13 +63,27 @@ export default async function AdminGuestsPage({
           </select>
         </label>
         <label>
+          <span>Invitacion</span>
+          <select name="sent" defaultValue={invitationSent === undefined ? "" : String(invitationSent)}>
+            <option value="">Todas</option>
+            <option value="true">Enviadas</option>
+            <option value="false">No enviadas</option>
+          </select>
+        </label>
+        <label>
           <span>Buscar</span>
           <input name="q" defaultValue={search} placeholder="Nombre o invitado principal" />
         </label>
-        <Button type="submit" variant="secondary">
-          <Search size={16} aria-hidden="true" />
-          Filtrar
-        </Button>
+        <div className={styles.filterActions}>
+          <Button type="submit" variant="secondary">
+            <Search size={16} aria-hidden="true" />
+            Filtrar
+          </Button>
+          <ButtonLink href="/admin/guests" variant="ghost">
+            <RotateCcw size={16} aria-hidden="true" />
+            Limpiar
+          </ButtonLink>
+        </div>
       </form>
 
       <section style={{ marginTop: 16 }}>
@@ -72,10 +93,17 @@ export default async function AdminGuestsPage({
   );
 }
 
-function guestHref(view: "all" | "groom" | "bride", status?: string) {
+function guestHref(
+  view: "all" | "groom" | "bride",
+  filters: { status?: string; invitationSent?: boolean; search?: string }
+) {
   const params = new URLSearchParams();
   if (view !== "all") params.set("view", view);
-  if (status) params.set("status", status);
+  if (filters.status) params.set("status", filters.status);
+  if (filters.invitationSent !== undefined) {
+    params.set("sent", String(filters.invitationSent));
+  }
+  if (filters.search) params.set("q", filters.search);
   const query = params.toString();
   return `/admin/guests${query ? `?${query}` : ""}`;
 }

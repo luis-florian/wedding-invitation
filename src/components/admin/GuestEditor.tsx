@@ -27,14 +27,18 @@ const statuses: RsvpStatus[] = ["pending", "confirmed", "declined"];
 export function GuestEditor({
   guest,
   adminSide,
-  assignableGuests
+  assignableGuests,
+  saved
 }: {
   guest: GuestDetail;
   adminSide: AdminSide;
   assignableGuests: AssignableGuest[];
+  saved?: string;
 }) {
   const canEdit = canEditSide(adminSide, guest.ownerSide);
   const invitationUrl = buildInvitationUrl(guest.token);
+  const returnTo = `/admin/guests/${guest.id}`;
+  const savedMessage = getSavedMessage(saved);
 
   return (
     <div className={styles.adminStack}>
@@ -48,6 +52,12 @@ export function GuestEditor({
           Volver
         </ButtonLink>
       </div>
+
+      {savedMessage ? (
+        <p className={styles.successMessage} role="status">
+          {savedMessage}
+        </p>
+      ) : null}
 
       <section className={`${styles.panel} ${styles.editSummary}`}>
         <div>
@@ -80,6 +90,7 @@ export function GuestEditor({
         <form action={updateGuestAction} className={styles.formGrid}>
           <input type="hidden" name="id" value={guest.id} />
           <input type="hidden" name="ownerSide" value={guest.ownerSide} />
+          <input type="hidden" name="returnTo" value={returnTo} />
           <TextField label="Nombre" name="name" defaultValue={guest.name} required disabled={!canEdit} />
           <StatusSelect name="status" defaultValue={guest.status} disabled={!canEdit} />
           {canEdit ? <Button type="submit">Guardar invitado</Button> : null}
@@ -93,6 +104,7 @@ export function GuestEditor({
           {guest.companions.map((companion) => (
             <form action={updateCompanionAction} className={styles.inlineForm} key={companion.id}>
               <input type="hidden" name="id" value={companion.id} />
+              <input type="hidden" name="returnTo" value={returnTo} />
               <TextField
                 label="Nombre"
                 name="name"
@@ -121,6 +133,7 @@ export function GuestEditor({
             <form action={createCompanionAction} className={styles.inlineForm}>
               <input type="hidden" name="guestId" value={guest.id} />
               <input type="hidden" name="status" value="pending" />
+              <input type="hidden" name="returnTo" value={returnTo} />
               <TextField label="Nuevo sub invitado" name="name" required />
               <Button type="submit" variant="secondary">Agregar sub invitado</Button>
             </form>
@@ -168,6 +181,13 @@ export function GuestEditor({
       ) : null}
     </div>
   );
+}
+
+function getSavedMessage(saved?: string) {
+  if (saved === "guest") return "Invitado guardado.";
+  if (saved === "companion") return "Sub invitado guardado.";
+  if (saved === "companion-created") return "Sub invitado agregado.";
+  return null;
 }
 
 function StatusSelect({

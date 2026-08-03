@@ -18,6 +18,7 @@
   background: var(--surface);
   color: var(--text-primary);
   padding: 10px 12px;
+  font-size: 16px;
   font-weight: 500;
 }
 

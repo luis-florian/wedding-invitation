@@ -4,8 +4,16 @@ import { ButtonLink } from "@/components/ui/Button";
 import { CreateGuestForm } from "@/components/admin/GuestForms";
 import styles from "@/components/admin/admin.module.css";
 
-export default async function AdminNewGuestPage() {
-  const admin = await requireAdmin();
+export default async function AdminNewGuestPage({
+  searchParams
+}: {
+  searchParams: Promise<{ duplicateId?: string; duplicateName?: string; name?: string }>;
+}) {
+  const [admin, query] = await Promise.all([requireAdmin(), searchParams]);
+  const duplicate =
+    query.duplicateId && query.duplicateName
+      ? { id: query.duplicateId, name: query.duplicateName }
+      : undefined;
 
   return (
     <main className={`${styles.adminShell} ${styles.adminPage}`}>
@@ -20,7 +28,7 @@ export default async function AdminNewGuestPage() {
         </ButtonLink>
       </div>
 
-      <CreateGuestForm adminSide={admin.side} />
+      <CreateGuestForm adminSide={admin.side} defaultName={query.name ?? ""} duplicate={duplicate} />
     </main>
   );
 }

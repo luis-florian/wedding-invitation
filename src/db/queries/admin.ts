@@ -10,7 +10,11 @@ import { getMainWedding } from "./wedding";
 
 export type GuestView = "all" | AdminSide;
 
-export async function getGuestRows(view: GuestView = "all", status?: RsvpStatus) {
+export async function getGuestRows(
+  view: GuestView = "all",
+  status?: RsvpStatus,
+  invitationSent?: boolean
+) {
   const db = getDb();
   const wedding = await getMainWedding();
   if (!wedding) return [];
@@ -18,6 +22,7 @@ export async function getGuestRows(view: GuestView = "all", status?: RsvpStatus)
   const filters = [eq(guests.weddingId, wedding.id)];
   if (view !== "all") filters.push(eq(guests.ownerSide, view));
   if (status) filters.push(eq(guests.status, status));
+  if (invitationSent !== undefined) filters.push(eq(guests.invitationSent, invitationSent));
 
   const guestRows = await db
     .select()
@@ -58,8 +63,12 @@ export async function getGuestById(id: string) {
   return { ...guest, companions };
 }
 
-export async function getGuestTableRows(view: GuestView = "all", status?: RsvpStatus) {
-  const guestRows = await getGuestRows(view);
+export async function getGuestTableRows(
+  view: GuestView = "all",
+  status?: RsvpStatus,
+  invitationSent?: boolean
+) {
+  const guestRows = await getGuestRows(view, undefined, invitationSent);
 
   return guestRows
     .flatMap((guest) => {
@@ -70,6 +79,7 @@ export async function getGuestTableRows(view: GuestView = "all", status?: RsvpSt
           name: guest.name,
           phone: guest.phone,
           status: guest.status,
+          invitationSent: guest.invitationSent,
           ownerSide: guest.ownerSide,
           principalName: guest.name,
           guestId: guest.id,
@@ -82,6 +92,7 @@ export async function getGuestTableRows(view: GuestView = "all", status?: RsvpSt
           name: companion.name,
           phone: null,
           status: companion.status,
+          invitationSent: guest.invitationSent,
           ownerSide: guest.ownerSide,
           principalName: guest.name,
           guestId: guest.id,
@@ -119,7 +130,9 @@ export async function getDashboardStats() {
       pendingPeople: 0,
       declinedPeople: 0,
       groomPeople: 0,
-      bridePeople: 0
+      bridePeople: 0,
+      sentInvitations: 0,
+      unsentInvitations: 0
     };
   }
 
@@ -130,7 +143,9 @@ export async function getDashboardStats() {
       pending: sql<number>`count(*) filter (where ${guests.status} = 'pending')::int`,
       declined: sql<number>`count(*) filter (where ${guests.status} = 'declined')::int`,
       groom: sql<number>`count(*) filter (where ${guests.ownerSide} = 'groom')::int`,
-      bride: sql<number>`count(*) filter (where ${guests.ownerSide} = 'bride')::int`
+      bride: sql<number>`count(*) filter (where ${guests.ownerSide} = 'bride')::int`,
+      sent: sql<number>`count(*) filter (where ${guests.invitationSent} = true)::int`,
+      unsent: sql<number>`count(*) filter (where ${guests.invitationSent} = false)::int`
     })
     .from(guests)
     .where(eq(guests.weddingId, wedding.id));
@@ -156,6 +171,8 @@ export async function getDashboardStats() {
     pendingPeople: guestStats.pending + companionStats.pending,
     declinedPeople: guestStats.declined + companionStats.declined,
     groomPeople: guestStats.groom + companionStats.groom,
-    bridePeople: guestStats.bride + companionStats.bride
+    bridePeople: guestStats.bride + companionStats.bride,
+    sentInvitations: guestStats.sent,
+    unsentInvitations: guestStats.unsent
   };
 }

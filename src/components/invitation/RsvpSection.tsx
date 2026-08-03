@@ -56,7 +56,7 @@ export function RsvpSection({ action, guest, companions }: RsvpSectionProps) {
     { id: guest.id, label: "Tu asistencia", status: statuses.guestStatus, fieldName: "guestStatus" },
     ...companions.map((companion) => ({
       id: companion.id,
-      label: `Acompañante: ${companion.name}`,
+      label: `${companion.name}`,
       status: statuses[`companion:${companion.id}`],
       fieldName: `companion:${companion.id}`
     }))

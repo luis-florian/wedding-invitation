@@ -23,17 +23,51 @@ type GuestRow = Awaited<ReturnType<typeof getGuestRows>>[number];
 
 const statuses: RsvpStatus[] = ["pending", "confirmed", "declined"];
 
-export function CreateGuestForm({ adminSide }: { adminSide: AdminSide }) {
+export function CreateGuestForm({
+  adminSide,
+  defaultName = "",
+  duplicate
+}: {
+  adminSide: AdminSide;
+  defaultName?: string;
+  duplicate?: { id: string; name: string };
+}) {
   return (
-    <form action={createGuestAction} className={`${styles.panel} ${styles.formGrid}`}>
-      <input type="hidden" name="ownerSide" value={adminSide} />
-      <input type="hidden" name="status" value="pending" />
-      <TextField label="Nombre" name="name" required />
-      <Button type="submit">
-        <Plus size={16} aria-hidden="true" />
-        Guardar invitado {sideLabels[adminSide].toLowerCase()}
-      </Button>
-    </form>
+    <div className={styles.adminStack}>
+      {duplicate ? (
+        <section className={styles.warningPanel} role="alert">
+          <div>
+            <strong>Este invitado parece existir.</strong>
+            <p>
+              Ya hay un registro llamado {duplicate.name}. Revisa si es la misma persona antes de
+              agregarlo otra vez.
+            </p>
+          </div>
+          <div className={styles.copyActions}>
+            <ButtonLink href={`/admin/guests/${duplicate.id}`} variant="secondary">
+              Ver existente
+            </ButtonLink>
+            <form action={createGuestAction}>
+              <input type="hidden" name="ownerSide" value={adminSide} />
+              <input type="hidden" name="status" value="pending" />
+              <input type="hidden" name="name" value={defaultName} />
+              <input type="hidden" name="confirmDuplicate" value="true" />
+              <Button type="submit">Agregar de todos modos</Button>
+            </form>
+          </div>
+        </section>
+      ) : null}
+
+      <form action={createGuestAction} className={`${styles.panel} ${styles.formGrid}`}>
+        <input type="hidden" name="ownerSide" value={adminSide} />
+        <input type="hidden" name="status" value="pending" />
+        <TextField label="Nombre" name="name" defaultValue={defaultName} required />
+        <Button type="submit">
+          <Plus size={16} aria-hidden="true" />
+          Guardar invitado {sideLabels[adminSide].toLowerCase()}
+        </Button>
+      </form>
+    </div>
   );
 }
 

@@ -303,6 +303,19 @@
   gap: 6px;
 }
 
+.metricLink {
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.metricLink:hover {
+  border-color: rgb(108 156 85 / 60%);
+  background: rgba(220, 231, 224, 0.1);
+  transform: translateY(-1px);
+}
+
 .metric span {
   color: var(--text-secondary);
   font-weight: 800;
@@ -310,6 +323,11 @@
 
 .metric strong {
   font-size: 36px;
+}
+
+.metric small {
+  color: var(--brand);
+  font-weight: 900;
 }
 
 .viewTabs {
@@ -338,7 +356,7 @@
 
 .filterBar {
   display: grid;
-  grid-template-columns: minmax(150px, 220px) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(150px, 200px) minmax(150px, 200px) minmax(0, 1fr) auto;
   align-items: end;
   gap: 12px;
 }
@@ -361,6 +379,39 @@
   background: var(--surface-muted);
   color: var(--text-primary);
   padding: 10px 12px;
+  font-size: 16px;
+}
+
+.filterActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.successMessage,
+.warningPanel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  font-weight: 800;
+}
+
+.successMessage {
+  background: var(--status-confirmed-bg);
+  color: var(--text-primary);
+}
+
+.warningPanel {
+  display: grid;
+  gap: 12px;
+  background: var(--status-pending-bg);
+  color: var(--text-primary);
+}
+
+.warningPanel p {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-weight: 700;
 }
 
 .guestList {
@@ -378,7 +429,7 @@
 
 .guestTable {
   width: 100%;
-  min-width: 760px;
+  min-width: 900px;
   border-collapse: collapse;
 }
 
@@ -411,6 +462,30 @@
   color: var(--text-secondary);
   font-size: 13px;
   font-weight: 700;
+}
+
+.sentToggle {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary);
+  font-weight: 800;
+}
+
+.sentToggle input {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  accent-color: var(--brand);
+}
+
+.sentToggle input:disabled {
+  opacity: 0.55;
+}
+
+.sentToggle[data-saving="true"] {
+  opacity: 0.7;
 }
 
 .guestCard {
@@ -506,8 +581,30 @@
   margin: 0 0 14px;
 }
 
+.notePanel {
+  display: grid;
+  gap: 16px;
+}
+
+.notePanel h2 {
+  margin: 0;
+}
+
+.noteRead {
+  min-height: 180px;
+  margin: 0;
+  white-space: pre-wrap;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
 @media (max-width: 720px) {
   .filterBar {
+    grid-template-columns: 1fr;
+  }
+
+  .filterActions {
+    display: grid;
     grid-template-columns: 1fr;
   }
 
@@ -522,6 +619,6 @@
   }
 
   .guestTable {
-    min-width: 760px;
+    min-width: 900px;
   }
 }

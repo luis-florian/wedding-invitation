@@ -56,3 +56,8 @@ export const weddingEventFormSchema = z.object({
   googleMapsUrl: z.string().trim().url().or(z.literal("")).optional(),
   wazeUrl: z.string().trim().url().or(z.literal("")).optional()
 });
+
+export const adminNoteFormSchema = z.object({
+  side: adminSideSchema,
+  body: z.string().trim().max(5000)
+});

@@ -1,4 +1,5 @@
 import {
+  boolean,
   check,
   index,
   integer,
@@ -45,6 +46,20 @@ export const adminUsers = pgTable(
   })
 );
 
+export const adminNotes = pgTable(
+  "admin_notes",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    side: adminSideEnum("side").notNull(),
+    body: text("body").default("").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull()
+  },
+  (table) => ({
+    sideUnique: uniqueIndex("admin_notes_side_unique").on(table.side)
+  })
+);
+
 export const weddingEvents = pgTable(
   "wedding_events",
   {
@@ -83,6 +98,7 @@ export const guests = pgTable(
     phone: text("phone"),
     ownerSide: adminSideEnum("owner_side").notNull(),
     token: text("token").notNull(),
+    invitationSent: boolean("invitation_sent").default(false).notNull(),
     status: rsvpStatusEnum("status").default("pending").notNull(),
     respondedAt: timestamp("responded_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
@@ -155,3 +171,4 @@ export type Guest = typeof guests.$inferSelect;
 export type GuestCompanion = typeof guestCompanions.$inferSelect;
 export type Wedding = typeof weddings.$inferSelect;
 export type WeddingEvent = typeof weddingEvents.$inferSelect;
+export type AdminNote = typeof adminNotes.$inferSelect;

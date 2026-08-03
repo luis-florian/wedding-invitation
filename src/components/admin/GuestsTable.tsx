@@ -7,6 +7,7 @@ import { buildInvitationUrl } from "@/lib/tokens";
 import { sideLabels } from "@/lib/format";
 import { canEditSide } from "@/lib/permissions";
 import { CopyInviteButton } from "./CopyInviteButton";
+import { InvitationSentToggle } from "./InvitationSentToggle";
 import styles from "./admin.module.css";
 
 type GuestTableRow = Awaited<ReturnType<typeof getGuestTableRows>>[number];
@@ -31,6 +32,7 @@ export function GuestsTable({
       <table className={styles.guestTable}>
         <thead>
           <tr>
+            <th>Enviada</th>
             <th>Persona</th>
             <th>De parte de</th>
             <th>Invitado principal</th>
@@ -46,6 +48,15 @@ export function GuestsTable({
 
             return (
               <tr key={`${row.rowType}-${row.id}`}>
+                <td data-label="Enviada">
+                  <InvitationSentToggle
+                    key={`${row.guestId}-${row.invitationSent}`}
+                    guestId={row.guestId}
+                    initialValue={row.invitationSent}
+                    disabled={!canEdit || row.rowType !== "principal"}
+                    label={`Marcar invitacion enviada para ${row.principalName}`}
+                  />
+                </td>
                 <td data-label="Persona">
                   <strong>{row.name}</strong>
                   {row.rowType === "sub" ? <span>Sub invitado</span> : null}

@@ -10,3 +10,9 @@ export function parseStatusFilter(value: string | string[] | undefined) {
   const parsed = rsvpStatusSchema.safeParse(value);
   return parsed.success ? parsed.data : undefined;
 }
+
+export function parseInvitationSentFilter(value: string | string[] | undefined) {
+  if (value === "true") return true;
+  if (value === "false") return false;
+  return undefined;
+}
