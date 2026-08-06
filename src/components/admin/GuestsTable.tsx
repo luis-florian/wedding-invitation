@@ -7,6 +7,7 @@ import { buildInvitationUrl } from "@/lib/tokens";
 import { sideLabels } from "@/lib/format";
 import { canEditSide } from "@/lib/permissions";
 import { CopyInviteButton } from "./CopyInviteButton";
+import { CopyInviteMessageButton } from "./CopyInviteMessageButton";
 import { InvitationSentToggle } from "./InvitationSentToggle";
 import styles from "./admin.module.css";
 
@@ -14,10 +15,12 @@ type GuestTableRow = Awaited<ReturnType<typeof getGuestTableRows>>[number];
 
 export function GuestsTable({
   rows,
-  adminSide
+  adminSide,
+  inviteMessage
 }: {
   rows: GuestTableRow[];
   adminSide: AdminSide;
+  inviteMessage?: string | null;
 }) {
   if (rows.length === 0) {
     return (
@@ -37,7 +40,7 @@ export function GuestsTable({
             <th>De parte de</th>
             <th>Invitado principal</th>
             <th>Estado</th>
-            <th>Link</th>
+            <th>Compartir</th>
             <th>Editar</th>
           </tr>
         </thead>
@@ -66,8 +69,11 @@ export function GuestsTable({
                 <td data-label="Estado">
                   <StatusBadge status={row.status} />
                 </td>
-                <td data-label="Link">
-                  <CopyInviteButton url={invitationUrl} />
+                <td data-label="Compartir">
+                  <div className={styles.copyActions}>
+                    <CopyInviteButton url={invitationUrl} />
+                    <CopyInviteMessageButton url={invitationUrl} message={inviteMessage} />
+                  </div>
                 </td>
                 <td data-label="Editar">
                   <ButtonLink

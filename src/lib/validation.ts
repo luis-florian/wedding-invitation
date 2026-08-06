@@ -42,7 +42,8 @@ export const weddingFormSchema = z.object({
   weddingDate: z.string().min(1),
   heroImageUrl: z.string().trim().url().or(z.literal("")).optional(),
   introMessage: z.string().trim().max(2000).optional(),
-  finalMessage: z.string().trim().max(2000).optional()
+  finalMessage: z.string().trim().max(2000).optional(),
+  inviteMessage: z.string().trim().max(2000).optional()
 });
 
 export const weddingEventFormSchema = z.object({

@@ -26,6 +26,7 @@ export const weddings = pgTable("weddings", {
   heroImageUrl: text("hero_image_url"),
   introMessage: text("intro_message"),
   finalMessage: text("final_message"),
+  inviteMessage: text("invite_message"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull()
 });

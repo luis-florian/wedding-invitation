@@ -3,6 +3,7 @@ import { getWeddingWithEvents } from "@/db/queries/wedding";
 import { updateWeddingAction, updateWeddingEventAction } from "@/app/actions";
 import { Button } from "@/components/ui/Button";
 import { TextArea, TextField } from "@/components/ui/Field";
+import { defaultInviteMessage } from "@/lib/invitation-message";
 import styles from "@/components/admin/admin.module.css";
 
 export default async function AdminWeddingPage() {
@@ -54,6 +55,11 @@ export default async function AdminWeddingPage() {
           label="Mensaje final"
           name="finalMessage"
           defaultValue={wedding.finalMessage ?? ""}
+        />
+        <TextArea
+          label="Mensaje para compartir invitacion"
+          name="inviteMessage"
+          defaultValue={wedding.inviteMessage ?? defaultInviteMessage}
         />
         <Button type="submit">Guardar boda</Button>
       </form>

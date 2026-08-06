@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getGuestById, getGuestRows } from "@/db/queries/admin";
+import { getMainWedding } from "@/db/queries/wedding";
 import { requireAdmin } from "@/lib/auth";
 import { normalizeSearchText } from "@/lib/text";
 import { GuestEditor } from "@/components/admin/GuestEditor";
@@ -13,7 +14,7 @@ export default async function AdminGuestEditPage({
   searchParams: Promise<{ saved?: string }>;
 }) {
   const [admin, { guestId }, query] = await Promise.all([requireAdmin(), params, searchParams]);
-  const guest = await getGuestById(guestId);
+  const [guest, wedding] = await Promise.all([getGuestById(guestId), getMainWedding()]);
 
   if (!guest) notFound();
   const companionNames = new Set(
@@ -36,6 +37,7 @@ export default async function AdminGuestEditPage({
         adminSide={admin.side}
         assignableGuests={candidates}
         saved={query.saved}
+        inviteMessage={wedding?.inviteMessage}
       />
     </main>
   );

@@ -429,7 +429,7 @@
 
 .guestTable {
   width: 100%;
-  min-width: 900px;
+  min-width: 980px;
   border-collapse: collapse;
 }
 
@@ -619,6 +619,6 @@
   }
 
   .guestTable {
-    min-width: 900px;
+    min-width: 980px;
   }
 }

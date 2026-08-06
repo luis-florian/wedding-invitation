@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Plus, RotateCcw, Search } from "lucide-react";
 import { getGuestTableRows } from "@/db/queries/admin";
+import { getMainWedding } from "@/db/queries/wedding";
 import { requireAdmin } from "@/lib/auth";
 import {
   parseGuestView,
@@ -18,7 +19,11 @@ export default async function AdminGuestsPage({
 }: {
   searchParams: Promise<{ view?: string; status?: string; sent?: string; q?: string }>;
 }) {
-  const [admin, query] = await Promise.all([requireAdmin(), searchParams]);
+  const [admin, query, wedding] = await Promise.all([
+    requireAdmin(),
+    searchParams,
+    getMainWedding()
+  ]);
   const view = parseGuestView(query.view);
   const status = parseStatusFilter(query.status);
   const invitationSent = parseInvitationSentFilter(query.sent);
@@ -87,7 +92,7 @@ export default async function AdminGuestsPage({
       </form>
 
       <section style={{ marginTop: 16 }}>
-        <GuestsTable rows={rows} adminSide={admin.side} />
+        <GuestsTable rows={rows} adminSide={admin.side} inviteMessage={wedding?.inviteMessage} />
       </section>
     </main>
   );

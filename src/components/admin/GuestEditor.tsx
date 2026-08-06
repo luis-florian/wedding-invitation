@@ -17,6 +17,7 @@ import { sideLabels, statusLabels } from "@/lib/format";
 import { canEditSide } from "@/lib/permissions";
 import { ConfirmSubmitButton } from "./ConfirmSubmitButton";
 import { CopyInviteButton } from "./CopyInviteButton";
+import { CopyInviteMessageButton } from "./CopyInviteMessageButton";
 import styles from "./admin.module.css";
 
 type GuestDetail = NonNullable<Awaited<ReturnType<typeof getGuestById>>>;
@@ -28,12 +29,14 @@ export function GuestEditor({
   guest,
   adminSide,
   assignableGuests,
-  saved
+  saved,
+  inviteMessage
 }: {
   guest: GuestDetail;
   adminSide: AdminSide;
   assignableGuests: AssignableGuest[];
   saved?: string;
+  inviteMessage?: string | null;
 }) {
   const canEdit = canEditSide(adminSide, guest.ownerSide);
   const invitationUrl = buildInvitationUrl(guest.token);
@@ -65,11 +68,12 @@ export function GuestEditor({
           <StatusBadge status={guest.status} />
         </div>
         <div>
-          <span className={styles.adminMuted}>Link de invitacion</span>
+          <span className={styles.adminMuted}>Compartir invitacion</span>
           <code>{invitationUrl}</code>
         </div>
         <div className={styles.copyActions}>
           <CopyInviteButton url={invitationUrl} />
+          <CopyInviteMessageButton url={invitationUrl} message={inviteMessage} />
           <ButtonLink href={invitationUrl} target="_blank" variant="secondary">
             Abrir invitacion
           </ButtonLink>
