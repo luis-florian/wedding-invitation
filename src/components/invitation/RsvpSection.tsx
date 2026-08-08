@@ -46,6 +46,7 @@ const invitationStatusLabels: Record<RsvpStatus, string> = {
 };
 
 export function RsvpSection({ action, guest, companions }: RsvpSectionProps) {
+  const guestCount = companions.length + 1;
   const [statuses, setStatuses] = useState<Record<string, RsvpStatus>>(() => ({
     guestStatus: guest.status,
     ...Object.fromEntries(companions.map((companion) => [`companion:${companion.id}`, companion.status]))
@@ -106,6 +107,10 @@ export function RsvpSection({ action, guest, companions }: RsvpSectionProps) {
         </div>
         <StatusBadge status={statuses.guestStatus} label={invitationStatusLabels[statuses.guestStatus]} />
       </div>
+
+      <p className={styles.invitationCount}>
+        Invitación para: <strong>{guestCount}</strong> {guestCount === 1 ? "persona" : "personas"}
+      </p>
 
       {toast ? (
         <p className={styles.rsvpToast} data-tone={toast.tone} role="status" aria-live="polite">
