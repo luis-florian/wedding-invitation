@@ -500,7 +500,8 @@ export async function updateWeddingAction(formData: FormData) {
     heroImageUrl: nullable(formData.get("heroImageUrl")) ?? "",
     introMessage: nullable(formData.get("introMessage")) ?? "",
     finalMessage: nullable(formData.get("finalMessage")) ?? "",
-    inviteMessage: nullable(formData.get("inviteMessage")) ?? ""
+    inviteMessage: nullable(formData.get("inviteMessage")) ?? "",
+    reconfirmationMessage: nullable(formData.get("reconfirmationMessage")) ?? ""
   });
 
   await db
@@ -512,6 +513,7 @@ export async function updateWeddingAction(formData: FormData) {
       introMessage: parsed.introMessage || null,
       finalMessage: parsed.finalMessage || null,
       inviteMessage: parsed.inviteMessage || null,
+      reconfirmationMessage: parsed.reconfirmationMessage || null,
       updatedAt: new Date()
     })
     .where(eq(weddings.id, bundle.wedding.id));

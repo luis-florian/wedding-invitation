@@ -92,7 +92,12 @@ export default async function AdminGuestsPage({
       </form>
 
       <section style={{ marginTop: 16 }}>
-        <GuestsTable rows={rows} adminSide={admin.side} inviteMessage={wedding?.inviteMessage} />
+        <GuestsTable
+          rows={rows}
+          adminSide={admin.side}
+          inviteMessage={wedding?.inviteMessage}
+          reconfirmationMessage={wedding?.reconfirmationMessage}
+        />
       </section>
     </main>
   );

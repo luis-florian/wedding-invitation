@@ -6,6 +6,7 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import { buildInvitationUrl } from "@/lib/tokens";
 import { sideLabels } from "@/lib/format";
 import { canEditSide } from "@/lib/permissions";
+import { defaultReconfirmationMessage } from "@/lib/invitation-message";
 import { CopyInviteButton } from "./CopyInviteButton";
 import { CopyInviteMessageButton } from "./CopyInviteMessageButton";
 import { InvitationSentToggle } from "./InvitationSentToggle";
@@ -16,11 +17,13 @@ type GuestTableRow = Awaited<ReturnType<typeof getGuestTableRows>>[number];
 export function GuestsTable({
   rows,
   adminSide,
-  inviteMessage
+  inviteMessage,
+  reconfirmationMessage
 }: {
   rows: GuestTableRow[];
   adminSide: AdminSide;
   inviteMessage?: string | null;
+  reconfirmationMessage?: string | null;
 }) {
   if (rows.length === 0) {
     return (
@@ -73,6 +76,13 @@ export function GuestsTable({
                   <div className={styles.copyActions}>
                     <CopyInviteButton url={invitationUrl} />
                     <CopyInviteMessageButton url={invitationUrl} message={inviteMessage} />
+                    <CopyInviteMessageButton
+                      url={invitationUrl}
+                      message={reconfirmationMessage}
+                      fallbackMessage={defaultReconfirmationMessage}
+                      label="Reconfirmar"
+                      icon="refresh"
+                    />
                   </div>
                 </td>
                 <td data-label="Editar">

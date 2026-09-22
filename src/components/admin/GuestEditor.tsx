@@ -15,6 +15,7 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import { buildInvitationUrl } from "@/lib/tokens";
 import { sideLabels, statusLabels } from "@/lib/format";
 import { canEditSide } from "@/lib/permissions";
+import { defaultReconfirmationMessage } from "@/lib/invitation-message";
 import { ConfirmSubmitButton } from "./ConfirmSubmitButton";
 import { CopyInviteButton } from "./CopyInviteButton";
 import { CopyInviteMessageButton } from "./CopyInviteMessageButton";
@@ -30,13 +31,15 @@ export function GuestEditor({
   adminSide,
   assignableGuests,
   saved,
-  inviteMessage
+  inviteMessage,
+  reconfirmationMessage
 }: {
   guest: GuestDetail;
   adminSide: AdminSide;
   assignableGuests: AssignableGuest[];
   saved?: string;
   inviteMessage?: string | null;
+  reconfirmationMessage?: string | null;
 }) {
   const canEdit = canEditSide(adminSide, guest.ownerSide);
   const invitationUrl = buildInvitationUrl(guest.token);
@@ -74,6 +77,13 @@ export function GuestEditor({
         <div className={styles.copyActions}>
           <CopyInviteButton url={invitationUrl} />
           <CopyInviteMessageButton url={invitationUrl} message={inviteMessage} />
+          <CopyInviteMessageButton
+            url={invitationUrl}
+            message={reconfirmationMessage}
+            fallbackMessage={defaultReconfirmationMessage}
+            label="Reconfirmar"
+            icon="refresh"
+          />
           <ButtonLink href={invitationUrl} target="_blank" variant="secondary">
             Abrir invitacion
           </ButtonLink>

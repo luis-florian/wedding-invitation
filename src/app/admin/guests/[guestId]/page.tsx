@@ -38,6 +38,7 @@ export default async function AdminGuestEditPage({
         assignableGuests={candidates}
         saved={query.saved}
         inviteMessage={wedding?.inviteMessage}
+        reconfirmationMessage={wedding?.reconfirmationMessage}
       />
     </main>
   );
